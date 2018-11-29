@@ -7,7 +7,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 final class StorageFactory {
-    ServiceMethod<?> serviceMethod;
+    private ServiceMethod<?> serviceMethod;
 
     static StorageFactory parseAnnotations(UStorage storage, Method method) {
         return new Builder(storage, method).build();

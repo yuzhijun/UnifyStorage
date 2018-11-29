@@ -41,11 +41,11 @@ public class DBServiceMethod<ReturnT> extends ServiceMethod<ReturnT> {
         }else if(annotation instanceof SAVE){
             storageHandler = SaveHandler.parseAnnotations(annotations);
         }else if(annotation instanceof SAVEORUPDATE){
-
+             //TODO
         }else if(annotation instanceof UPDATE){
-
+            //TODO
         }else if(annotation instanceof INSERT){
-
+            //TODO
         }
     }
 

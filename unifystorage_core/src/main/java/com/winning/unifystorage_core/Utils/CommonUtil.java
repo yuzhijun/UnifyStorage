@@ -13,4 +13,8 @@ public class CommonUtil {
             throw new IllegalArgumentException("API interfaces must not extend other interfaces.");
         }
     }
+
+    public static boolean isEmptyStr(String str){
+        return null == str || "".equalsIgnoreCase(str);
+    }
 }
