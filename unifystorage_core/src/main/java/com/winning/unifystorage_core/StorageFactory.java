@@ -45,9 +45,11 @@ final class StorageFactory {
 
         private void parseMethodAnnotation(Annotation annotation){
             if (annotation instanceof DB){
-                this.serviceMethod = DBServiceMethod.parseAnnotations(this.storage, this.method);
+                DB db = (DB) annotation;
+                this.serviceMethod = DBServiceMethod.parseAnnotations(this.storage, this.method, db.table());
             }else if (annotation instanceof JSON){
-                this.serviceMethod = JSONServiceMethod.parseAnnotations(this.storage, this.method);
+                JSON json = (JSON) annotation;
+                this.serviceMethod = JSONServiceMethod.parseAnnotations(this.storage, this.method, json.key());
             }
         }
     }

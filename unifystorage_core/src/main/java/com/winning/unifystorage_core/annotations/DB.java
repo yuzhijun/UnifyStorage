@@ -5,11 +5,13 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import io.realm.RealmObject;
+
 import static java.lang.annotation.ElementType.METHOD;
 
 @Documented
 @Target(METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface DB {
-    Class<?> table();
+    Class<? extends RealmObject> table();
 }

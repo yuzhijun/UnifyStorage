@@ -12,32 +12,36 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 
+import io.realm.RealmObject;
+
 public class DBServiceMethod<ReturnT> extends ServiceMethod<ReturnT> {
     private final Annotation[][] parameterAnnotationsArray;
     private final Type[] parameterTypes;
 
     private static HandlerAdapter storageHandler;
+    private Class<? extends RealmObject> table;
 
-    private DBServiceMethod(Method method){
+    private DBServiceMethod(Method method, Class<? extends RealmObject> table){
         this.parameterTypes = method.getGenericParameterTypes();
         this.parameterAnnotationsArray = method.getParameterAnnotations();
-    }
-
-    static <ReturnT> DBServiceMethod<ReturnT> parseAnnotations(
-            UStorage storage, Method method) {
+        this.table = table;
 
         if (null != method){
             for (Annotation annotation : method.getAnnotations()){
                 parseHandler(annotation, method.getAnnotations());
             }
         }
-
-        return new DBServiceMethod<>(method);
     }
 
-    private static void parseHandler(Annotation annotation, Annotation[] annotations) {
+    static <ReturnT> DBServiceMethod<ReturnT> parseAnnotations(
+            UStorage storage, Method method, Class<? extends RealmObject> table) {
+
+        return new DBServiceMethod<>(method, table);
+    }
+
+    private void parseHandler(Annotation annotation, Annotation[] annotations) {
         if (annotation instanceof FIND){
-            storageHandler = FindHandler.parseAnnotations(annotations);
+            storageHandler = FindHandler.parseAnnotations(annotations, this.table);
         }else if(annotation instanceof SAVE){
             storageHandler = SaveHandler.parseAnnotations(annotations);
         }else if(annotation instanceof SAVEORUPDATE){
