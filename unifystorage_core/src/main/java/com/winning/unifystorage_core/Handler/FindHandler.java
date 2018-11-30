@@ -4,6 +4,7 @@ import com.winning.unifystorage_core.HandlerAdapter;
 import com.winning.unifystorage_core.UStorage;
 import com.winning.unifystorage_core.Utils.CommonUtil;
 import com.winning.unifystorage_core.annotations.FIND;
+import com.winning.unifystorage_core.model.DbResult;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
@@ -15,6 +16,8 @@ import java.util.regex.Pattern;
 
 import javax.annotation.Nonnull;
 
+import io.realm.OrderedCollectionChangeSet;
+import io.realm.OrderedRealmCollectionChangeListener;
 import io.realm.RealmObject;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
@@ -23,16 +26,16 @@ import io.realm.RealmResults;
  * @author yuzhijun 2018/11/30
  * */
 public class FindHandler extends HandlerAdapter {
-    private static final String EQUAL_TO = "\\w+(\\s)?=(\\s)?[?]";
-    private static final String GREATER_THAN = "\\w+(\\s)?>(\\s)?[?]";
-    private static final String LESS_THAN = "\\w+(\\s)?<(\\s)?[?]";
-    private static final String GREATER_THAN_OR_EQUAL_TO = "\\w+(\\s)?>=(\\s)?[?]";
-    private static final String LESS_THAN_OR_EQUAL_TO = "\\w+(\\s)?<=(\\s)?[?]";
-    private static final String CONTAINS = "\\w+(\\s)?contains(\\s)?[?]";
-    private static final String LIKE = "\\w+(\\s)?like(\\s)?[?]";
-    private static final String ISNOTNULL = "\\w+(\\s)?notnull";
-    private static final String NULL = "\\w+(\\s)?null";
-    private static final String IN = "\\w+(\\s)?in(\\s)?[?]";
+    private static final String EQUAL_TO = "\\w+(\\s)?=(\\s)?[?](\\s)?";
+    private static final String GREATER_THAN = "\\w+(\\s)?>(\\s)?[?](\\s)?";
+    private static final String LESS_THAN = "\\w+(\\s)?<(\\s)?[?](\\s)?";
+    private static final String GREATER_THAN_OR_EQUAL_TO = "\\w+(\\s)?>=(\\s)?[?](\\s)?";
+    private static final String LESS_THAN_OR_EQUAL_TO = "\\w+(\\s)?<=(\\s)?[?](\\s)?";
+    private static final String CONTAINS = "\\w+(\\s)?contains(\\s)?[?](\\s)?";
+    private static final String LIKE = "\\w+(\\s)?like(\\s)?[?](\\s)?";
+    private static final String ISNOTNULL = "\\w+(\\s)?notnull(\\s)?";
+    private static final String NULL = "\\w+(\\s)?null(\\s)?";
+    private static final String IN = "\\w+(\\s)?in(\\s)?[?](\\s)?";
     private static final String AND_OR = "and|or";
 
     private List<String> linkCondition = new ArrayList<>();
@@ -45,6 +48,7 @@ public class FindHandler extends HandlerAdapter {
     private String distinct;
     private int limit;
     private boolean eager;
+    private DbResult dbResult;
 
     private FindHandler(Annotation[] annotations, Class<? extends RealmObject> table){
         this.table = table;
@@ -72,31 +76,40 @@ public class FindHandler extends HandlerAdapter {
 
     @SuppressWarnings("unchecked")
     @Override
-    public RealmResults<? extends RealmObject> invoke(Object[] args, Type[] parameterTypes, Annotation[][] parameterAnnotationsArray) {
-        RealmQuery<? extends RealmObject> query = UStorage.realm.where(this.table);
-        RealmQuery<? extends RealmObject> whereFilteredQuery = whereFilter(query, args , parameterTypes);
+    public DbResult invoke(Object[] args, Type[] parameterTypes, Annotation[][] parameterAnnotationsArray) {
+        dbResult = new DbResult();
+        try{
+            RealmQuery<? extends RealmObject> query = UStorage.realm.where(this.table);
+            RealmQuery<? extends RealmObject> whereFilteredQuery = whereFilter(query, args , parameterTypes);
 
-        if (!CommonUtil.isEmptyStr(orderBy)){
-            whereFilteredQuery.sort(orderBy);
+            if (!CommonUtil.isEmptyStr(orderBy)){
+                whereFilteredQuery.sort(orderBy);
+            }
+
+            if (0 != limit){
+                whereFilteredQuery.limit(limit);
+            }
+
+            if (!CommonUtil.isEmptyStr(distinct)){
+                whereFilteredQuery.distinct(distinct);
+            }
+
+            RealmResults result = whereFilteredQuery.findAllAsync();
+            result.addChangeListener(new OrderedRealmCollectionChangeListener<RealmResults>() {
+                @Override
+                public void onChange(RealmResults realmResults, OrderedCollectionChangeSet changeSet) {
+                    dbResult.setDbFindCallBack(realmResults, changeSet);
+                }
+            });
+        }catch (Exception e){
+            e.printStackTrace();
         }
 
-        if (0 != limit){
-            whereFilteredQuery.limit(limit);
-        }
-
-        if (!CommonUtil.isEmptyStr(distinct)){
-            whereFilteredQuery.distinct(distinct);
-        }
-
-        RealmResults<? extends RealmObject> result = whereFilteredQuery.findAllAsync();
-        if (result.isLoaded()) {
-            return result;
-        }
-
-        return null;
+        return dbResult;
     }
 
     private RealmQuery<? extends RealmObject> whereFilter(RealmQuery<? extends RealmObject> query,Object[] args, Type[] parameterTypes){
+        linkCondition.clear();
         if (!CommonUtil.isEmptyStr(where)){
             Pattern linkPattern = Pattern.compile(AND_OR);
             Matcher linkMatcher = linkPattern.matcher(where);
@@ -138,6 +151,7 @@ public class FindHandler extends HandlerAdapter {
 
     private void buildWhereCondition( @Nonnull RealmQuery<? extends RealmObject> query, @Nonnull String whereCondition,
                                       @Nonnull Object parameter, @Nonnull Type parameterType) {
+        Class<?> rawType = CommonUtil.getRawType(parameterType);
         for (int j = 0; j < patternArray.length; j ++){
             Pattern pattern = Pattern.compile(patternArray[j][0]);
             Matcher matcher = pattern.matcher(whereCondition);
@@ -179,7 +193,7 @@ public class FindHandler extends HandlerAdapter {
                     }else if ("<=".equalsIgnoreCase(patternArray[j][1])){
                         query.lessThanOrEqualTo(array[0].trim(),(Date) parameter);
                     }
-                }else if (parameterType == List.class){
+                }else if (List.class.isAssignableFrom(rawType)){
                     if ("in".equalsIgnoreCase(patternArray[j][1])){
                         query.in(array[0].trim(), (String[]) ((List)parameter).toArray());
                     }
