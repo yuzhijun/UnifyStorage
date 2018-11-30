@@ -2,6 +2,7 @@ package com.winning.unifystorage_core;
 
 import com.winning.unifystorage_core.Handler.FindHandler;
 import com.winning.unifystorage_core.Handler.SaveHandler;
+import com.winning.unifystorage_core.Handler.SaveOrUpdateHandler;
 import com.winning.unifystorage_core.annotations.FIND;
 import com.winning.unifystorage_core.annotations.INSERT;
 import com.winning.unifystorage_core.annotations.SAVE;
@@ -45,8 +46,7 @@ public class DBServiceMethod<ReturnT> extends ServiceMethod<ReturnT> {
         }else if(annotation instanceof SAVE){
             storageHandler = SaveHandler.parseAnnotations(annotations);
         }else if(annotation instanceof SAVEORUPDATE){
-             //TODO
-
+            storageHandler = SaveOrUpdateHandler.parseAnnotations(annotations);
         }else if(annotation instanceof UPDATE){
             //TODO
         }else if(annotation instanceof INSERT){

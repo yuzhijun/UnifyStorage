@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
+    private Button btnInsert;
     private Button btnFind;
     private ApiDataBase mApiDataBase;
 
@@ -14,10 +15,22 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        btnInsert = findViewById(R.id.btnInsert);
         btnFind = findViewById(R.id.btnFind);
 
         mApiDataBase = ApiServiceModule.getInstance().provideApiService(ApiDataBase.class);
 
+
+        btnInsert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                User user = new User();
+                user.setAge("10");
+                user.setName("sharkchao");
+                user.setSex("男");
+                mApiDataBase.saveUser(user);
+            }
+        });
         btnFind.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
