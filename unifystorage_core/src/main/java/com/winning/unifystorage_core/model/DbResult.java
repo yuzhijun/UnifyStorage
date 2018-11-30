@@ -8,9 +8,11 @@ package com.winning.unifystorage_core.model;
  */
 public class DbResult {
     private int count;
+    private DbResultCallback mResultCallback;
     private boolean isSuccess;
     private Throwable mThrowable;
-    private DbResultCallback mResultCallback;
+    private boolean hasObserver;
+
     public int getCount() {
         return count;
     }
@@ -26,23 +28,23 @@ public class DbResult {
 
     public void registerCallback(DbResultCallback callback){
         mResultCallback = callback;
-        if (isSuccess){
+        hasObserver = true;
+        setResultCallback(isSuccess,mThrowable);
+    }
 
+    public void setResultCallback(boolean success,Throwable throwable){
+        isSuccess = success;
+        mThrowable = throwable;
+        if (mResultCallback != null){
+            hasObserver = true;
+            if (isSuccess){
+                mResultCallback.onSuccess(count);
+            }else if (throwable != null){
+                mResultCallback.onError(throwable);
+            }
         }else {
-
+            hasObserver = false;
         }
     }
 
-    public DbResultCallback getResultCallback() {
-        return mResultCallback;
-    }
-
-
-    public void setSuccess(boolean success) {
-        isSuccess = success;
-    }
-
-    public void setThrowable(Throwable throwable) {
-        mThrowable = throwable;
-    }
 }

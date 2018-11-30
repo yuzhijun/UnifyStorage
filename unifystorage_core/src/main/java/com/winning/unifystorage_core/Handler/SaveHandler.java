@@ -27,30 +27,34 @@ public class SaveHandler extends HandlerAdapter {
 
     @Override
     public DbResult invoke(final Object[] args, final Type[] parameterTypes, Annotation[][] parameterAnnotationsArray) {
+       result = new DbResult();
         if (checkIfValid(args,parameterTypes,parameterAnnotationsArray)){
             UStorage.realm.executeTransactionAsync(new Realm.Transaction() {
                 @Override
                 public void execute(Realm realm) {
                     if (parameterTypes[0] instanceof  RealmObject && parameterTypes[0].getClass().isArray()){
-                        realm.copyToRealm(Arrays.asList((RealmObject[])args[0]));
+                        List<RealmObject> realmObjects = realm.copyToRealm(Arrays.asList((RealmObject[]) args[0]));
+                        result.setCount(realmObjects.size());
                     } else if (parameterTypes[0] instanceof  RealmObject){
-                        realm.copyToRealm(((RealmObject) args[0]));
+                         realm.copyToRealm(((RealmObject) args[0]));
+                        result.setCount(1);
                     } else if (parameterTypes[0] instanceof ParameterizedType){
                         ParameterizedType type = (ParameterizedType) parameterTypes[0];
                         if (type.getRawType() instanceof List && type.getActualTypeArguments()[0] instanceof RealmObject){
-                            realm.copyToRealm((List<RealmObject>)args[0]);
+                            List<RealmObject> realmObjects = realm.copyToRealm((List<RealmObject>) args[0]);
+                            result.setCount(realmObjects.size());
                         }
                     }
                 }
             }, new Realm.Transaction.OnSuccess() {
                 @Override
                 public void onSuccess() {
-
+                    result.setResultCallback(true,null);
                 }
             }, new Realm.Transaction.OnError() {
                 @Override
                 public void onError(Throwable error) {
-
+                    result.setResultCallback(false,error);
                 }
             });
         }
