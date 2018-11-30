@@ -9,7 +9,6 @@ public class StorageApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
         UStorage.initialize(this);
     }
 }

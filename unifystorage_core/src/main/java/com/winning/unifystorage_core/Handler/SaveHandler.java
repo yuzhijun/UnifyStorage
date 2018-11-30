@@ -31,12 +31,13 @@ public class SaveHandler extends HandlerAdapter {
     @Override
     public DbResult invoke(final Object[] args, final Type[] parameterTypes, Annotation[][] parameterAnnotationsArray) {
        result = new DbResult();
-        if (checkIfValid(args,parameterTypes,parameterAnnotationsArray)){
+        if (checkIfValid(args,parameterAnnotationsArray)){
             UStorage.realm.executeTransactionAsync(new Realm.Transaction() {
                 @Override
                 public void execute(@NonNull Realm realm) {
+
                     Class<?> rawType = CommonUtil.getRawType(parameterTypes[0]);
-                    if (RealmObject.class.isAssignableFrom(rawType) && rawType.isArray()){
+                    if (RealmObject[].class.isAssignableFrom(rawType) && rawType.isArray()){
                         List<RealmObject> realmObjects = realm.copyToRealm(Arrays.asList((RealmObject[]) args[0]));
                         result.setCount(realmObjects.size());
                     } else if (RealmObject.class.isAssignableFrom(rawType)){
@@ -45,11 +46,14 @@ public class SaveHandler extends HandlerAdapter {
                     } else if (List.class.isAssignableFrom(rawType)){
                         List<RealmObject> realmObjects = realm.copyToRealm((List<RealmObject>) args[0]);
                         result.setCount(realmObjects.size());
+                    }else {
+                        throw new ErrorParamsException("save method parameter is invalid");
                     }
                 }
             }, new Realm.Transaction.OnSuccess() {
                 @Override
                 public void onSuccess() {
+
                     result.setResultCallback(true,null);
                 }
             }, new Realm.Transaction.OnError() {
@@ -65,11 +69,10 @@ public class SaveHandler extends HandlerAdapter {
     /**
      * 验证参数是否合法
      * @param args
-     * @param parameterTypes
      * @param parameterAnnotationsArray
      * @return
      */
-    private boolean checkIfValid(Object[] args, Type[] parameterTypes, Annotation[][] parameterAnnotationsArray){
+    private boolean checkIfValid(Object[] args , Annotation[][] parameterAnnotationsArray){
         if (args.length == 1
                 &&parameterAnnotationsArray.length == 1
                 && parameterAnnotationsArray[0].length == 1
