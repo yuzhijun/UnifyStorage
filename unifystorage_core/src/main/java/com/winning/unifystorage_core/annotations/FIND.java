@@ -13,8 +13,7 @@ import static java.lang.annotation.ElementType.METHOD;
 public @interface FIND {
     String orderBy() default "";
     String where() default "";
-    String groupBy() default "";
+    String distinct() default "";
     int limit() default 0;
-    int offset() default 0;
     boolean eager() default true;
 }
