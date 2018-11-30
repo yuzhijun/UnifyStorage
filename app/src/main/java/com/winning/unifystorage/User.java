@@ -1,4 +1,4 @@
-package com.winning.unifystorage;
+package com.winning.unifystorage_core.model;
 
 import io.realm.RealmObject;
 
