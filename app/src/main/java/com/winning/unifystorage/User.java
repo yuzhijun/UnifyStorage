@@ -1,5 +1,7 @@
 package com.winning.unifystorage;
 
+import java.util.UUID;
+
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -11,18 +13,10 @@ import io.realm.annotations.PrimaryKey;
  */
 public class User extends RealmObject {
     @PrimaryKey
-    private int id;
+    private String id = UUID.randomUUID().toString();
     private String name;
     private String age;
     private String sex;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;

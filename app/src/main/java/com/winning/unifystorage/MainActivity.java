@@ -7,9 +7,6 @@ import android.widget.Button;
 
 import com.winning.unifystorage_core.model.DbResult;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class MainActivity extends AppCompatActivity {
     private Button btnInsert;
     private Button btnFind;
@@ -29,14 +26,11 @@ public class MainActivity extends AppCompatActivity {
         btnInsert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                List<User> users = new ArrayList<>();
                 User user = new User();
-                user.setId(1);
                 user.setAge("20");
                 user.setName("sharkchao");
                 user.setSex("男");
-                users.add(user);
-                mApiDataBase.saveUser(users).registerCallback(new DbResult.DbResultCallback() {
+                mApiDataBase.saveUser(user).registerCallback(new DbResult.DbResultCallback() {
                     @Override
                     public void onSuccess(int count) {
 

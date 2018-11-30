@@ -6,8 +6,6 @@ import com.winning.unifystorage_core.annotations.FIND;
 import com.winning.unifystorage_core.annotations.SAVE;
 import com.winning.unifystorage_core.model.DbResult;
 
-import java.util.List;
-
 import io.realm.RealmObject;
 import io.realm.RealmResults;
 
@@ -21,7 +19,7 @@ public interface ApiDataBase {
 
     @DB(table = User.class)
     @SAVE
-    DbResult saveUser(@FIELD List<User> user);
+    DbResult saveUser(@FIELD User user);
 
     @DB(table = User.class)
     @FIND(where = "name = ? and age > ?",limit = 10,orderBy = "age")

@@ -25,6 +25,7 @@ public final class UStorage {
     public  static MMKV kv;
 
     private UStorage(Builder builder){
+        realm = builder.realmDefault;
     }
 
     public static void initialize(Application context){
@@ -33,7 +34,6 @@ public final class UStorage {
         Realm.init(application);
 
         rootDir = MMKV.initialize(application);
-        realm = Realm.getDefaultInstance();
         kv = MMKV.defaultMMKV();
     }
 
@@ -77,6 +77,7 @@ public final class UStorage {
         private String dbName;
         private int schemaVersion = 0;
         private BaseMigration migration;
+        private Realm realmDefault;
 
         public Builder() {
         }
@@ -115,6 +116,8 @@ public final class UStorage {
 
             RealmConfiguration otherConfig = otherConfigBuilder.build();
             Realm.setDefaultConfiguration(otherConfig);
+
+            realmDefault = Realm.getDefaultInstance();
         }
     }
 
