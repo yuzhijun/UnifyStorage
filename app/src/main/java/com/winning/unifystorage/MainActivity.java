@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         btnInsert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-              insert1();
+              saveOrUpdateObject();
             }
         });
         btnFind.setOnClickListener(new View.OnClickListener() {
@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void insert1(){
+    private void saveUsersByObject(){
         User user = new User();
         user.setAge("20");
         user.setName("sharkchao");
@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-    private void insert2(){
+    private void saveUsersByList(){
         List<User>list = new ArrayList<>();
 
         User user1 = new User();
@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-    private void insert3(){
+    private void saveUsersByArray(){
         User[]users = new User[2];
 
         User user1 = new User();
@@ -122,5 +122,72 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+    private void saveOrUpdateObject(){
+        User user = new User();
+        user.setAge("20");
+        user.setName("大熊");
+        user.setSex("男");
+        mApiDataBase.saveOrUpdateUser(user).registerCallback(new DbResult.DbResultCallback() {
+            @Override
+            public void onSuccess(int count) {
+                Toast.makeText(MainActivity.this, "成功!"+count, Toast.LENGTH_SHORT).show();
+            }
+            @Override
+            public void onError(Throwable error) {
+                Toast.makeText(MainActivity.this, "失败"+error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void saveOrUpdateUsersByList(){
+        List<User>list = new ArrayList<>();
 
+        User user1 = new User();
+        user1.setAge("20");
+        user1.setName("小明");
+        user1.setSex("男");
+
+        User user2 = new User();
+        user2.setAge("15");
+        user2.setName("小红");
+        user2.setSex("女");
+
+        list.add(user1);
+        list.add(user2);
+        mApiDataBase.saveOrUpdateUsersByList(list).registerCallback(new DbResult.DbResultCallback() {
+            @Override
+            public void onSuccess(int count) {
+                Toast.makeText(MainActivity.this, "成功!"+count, Toast.LENGTH_SHORT).show();
+            }
+            @Override
+            public void onError(Throwable error) {
+                Toast.makeText(MainActivity.this, "失败"+error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void saveOrUpdateUsersByArray(){
+        User[]users = new User[2];
+
+        User user1 = new User();
+        user1.setAge("20");
+        user1.setName("小绿");
+        user1.setSex("男");
+
+        User user2 = new User();
+        user2.setAge("15");
+        user2.setName("小白");
+        user2.setSex("女");
+
+        users[0] = user1;
+        users[1] = user2;
+        mApiDataBase.saveOrUpdateUsersByArray(users).registerCallback(new DbResult.DbResultCallback() {
+            @Override
+            public void onSuccess(int count) {
+                Toast.makeText(MainActivity.this, "成功!"+count, Toast.LENGTH_SHORT).show();
+            }
+            @Override
+            public void onError(Throwable error) {
+                Toast.makeText(MainActivity.this, "失败"+error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 }

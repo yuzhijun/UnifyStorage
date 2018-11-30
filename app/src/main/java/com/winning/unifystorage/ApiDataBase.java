@@ -32,7 +32,7 @@ public interface ApiDataBase {
     @SAVE
     DbResult saveUsersByArray(@FIELD User[] user);
 
-//    @DB(table = User.class)
+    @DB(table = User.class)
     @SAVE
     DbResult saveFake(@FIELD Fake fake);
 
