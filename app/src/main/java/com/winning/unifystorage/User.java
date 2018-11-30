@@ -41,4 +41,5 @@ public class User extends RealmObject {
     public void setSex(String sex) {
         this.sex = sex;
     }
+
 }

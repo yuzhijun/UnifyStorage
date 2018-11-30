@@ -28,19 +28,19 @@ public class SaveOrUpdateHandler extends HandlerAdapter {
     @Override
     public DbResult invoke(final Object[] args, final Type[] parameterTypes, Annotation[][] parameterAnnotationsArray) {
         result = new DbResult();
-        if (checkIfValid(args,parameterTypes,parameterAnnotationsArray)){
+        if (checkIfValid(args,parameterAnnotationsArray)){
             UStorage.realm.executeTransactionAsync(new Realm.Transaction() {
                 @Override
                 public void execute(Realm realm) {
                     Class<?> rawType = CommonUtil.getRawType(parameterTypes[0]);
-                    if (RealmObject.class.isAssignableFrom(rawType) && rawType.isArray()){
-                        List<RealmObject> realmObjects = realm.copyToRealm(Arrays.asList((RealmObject[]) args[0]));
+                    if (RealmObject[].class.isAssignableFrom(rawType) && rawType.isArray()){
+                        List<RealmObject> realmObjects = realm.copyToRealmOrUpdate(Arrays.asList((RealmObject[]) args[0]));
                         result.setCount(realmObjects.size());
                     } else if (RealmObject.class.isAssignableFrom(rawType)){
-                        realm.copyToRealm(((RealmObject) args[0]));
+                        realm.copyToRealmOrUpdate(((RealmObject) args[0]));
                         result.setCount(1);
                     } else if (List.class.isAssignableFrom(rawType)){
-                        List<RealmObject> realmObjects = realm.copyToRealm((List<RealmObject>) args[0]);
+                        List<RealmObject> realmObjects = realm.copyToRealmOrUpdate((List<RealmObject>) args[0]);
                         result.setCount(realmObjects.size());
                     }
                 }
@@ -63,11 +63,10 @@ public class SaveOrUpdateHandler extends HandlerAdapter {
     /**
      * 验证参数是否合法
      * @param args
-     * @param parameterTypes
      * @param parameterAnnotationsArray
      * @return
      */
-    private boolean checkIfValid(Object[] args, Type[] parameterTypes, Annotation[][] parameterAnnotationsArray){
+    private boolean checkIfValid(Object[] args , Annotation[][] parameterAnnotationsArray){
         if (args.length == 1
                 &&parameterAnnotationsArray.length == 1
                 && parameterAnnotationsArray[0].length == 1

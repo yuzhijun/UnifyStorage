@@ -8,6 +8,9 @@ import android.widget.Toast;
 
 import com.winning.unifystorage_core.model.DbResult;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
     private Button btnInsert;
     private Button btnFind;
@@ -27,21 +30,7 @@ public class MainActivity extends AppCompatActivity {
         btnInsert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                User user = new User();
-                user.setAge("20");
-                user.setName("sharkchao");
-                user.setSex("男");
-                mApiDataBase.saveUser(user).registerCallback(new DbResult.DbResultCallback() {
-                    @Override
-                    public void onSuccess(int count) {
-                        Toast.makeText(MainActivity.this, "成功!"+count, Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onError(Throwable error) {
-                        Toast.makeText(MainActivity.this, "失败"+error.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+              insert1();
             }
         });
         btnFind.setOnClickListener(new View.OnClickListener() {
@@ -51,4 +40,87 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void insert1(){
+        User user = new User();
+        user.setAge("20");
+        user.setName("sharkchao");
+        user.setSex("男");
+        mApiDataBase.saveUser(user).registerCallback(new DbResult.DbResultCallback() {
+            @Override
+            public void onSuccess(int count) {
+                Toast.makeText(MainActivity.this, "成功!"+count, Toast.LENGTH_SHORT).show();
+            }
+            @Override
+            public void onError(Throwable error) {
+                Toast.makeText(MainActivity.this, "失败"+error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void insert2(){
+        List<User>list = new ArrayList<>();
+
+        User user1 = new User();
+        user1.setAge("20");
+        user1.setName("小明");
+        user1.setSex("男");
+
+        User user2 = new User();
+        user2.setAge("15");
+        user2.setName("小红");
+        user2.setSex("女");
+
+        list.add(user1);
+        list.add(user2);
+        mApiDataBase.saveUsersByList(list).registerCallback(new DbResult.DbResultCallback() {
+            @Override
+            public void onSuccess(int count) {
+                Toast.makeText(MainActivity.this, "成功!"+count, Toast.LENGTH_SHORT).show();
+            }
+            @Override
+            public void onError(Throwable error) {
+                Toast.makeText(MainActivity.this, "失败"+error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void insert3(){
+        User[]users = new User[2];
+
+        User user1 = new User();
+        user1.setAge("20");
+        user1.setName("小绿");
+        user1.setSex("男");
+
+        User user2 = new User();
+        user2.setAge("15");
+        user2.setName("小白");
+        user2.setSex("女");
+
+        users[0] = user1;
+        users[1] = user2;
+        mApiDataBase.saveUsersByArray(users).registerCallback(new DbResult.DbResultCallback() {
+            @Override
+            public void onSuccess(int count) {
+                Toast.makeText(MainActivity.this, "成功!"+count, Toast.LENGTH_SHORT).show();
+            }
+            @Override
+            public void onError(Throwable error) {
+                Toast.makeText(MainActivity.this, "失败"+error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void saveFake(){
+        mApiDataBase.saveFake(new Fake()).registerCallback(new DbResult.DbResultCallback() {
+            @Override
+            public void onSuccess(int count) {
+                Toast.makeText(MainActivity.this, "成功!"+count, Toast.LENGTH_SHORT).show();
+            }
+            @Override
+            public void onError(Throwable error) {
+                Toast.makeText(MainActivity.this, "失败"+error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 }
