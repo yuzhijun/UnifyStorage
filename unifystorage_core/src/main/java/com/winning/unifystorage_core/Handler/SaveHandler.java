@@ -49,12 +49,12 @@ public class SaveHandler extends HandlerAdapter {
             }, new Realm.Transaction.OnSuccess() {
                 @Override
                 public void onSuccess() {
-                    result.setResult(true,null);
+                    result.setResultCallback(true,null);
                 }
             }, new Realm.Transaction.OnError() {
                 @Override
                 public void onError(Throwable error) {
-                    result.setResult(false,error);
+                    result.setResultCallback(false,error);
                 }
             });
         }
