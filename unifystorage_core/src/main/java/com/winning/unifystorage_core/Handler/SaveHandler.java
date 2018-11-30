@@ -47,6 +47,7 @@ public class SaveHandler extends HandlerAdapter {
             }, new Realm.Transaction.OnSuccess() {
                 @Override
                 public void onSuccess() {
+
                     result.setResultCallback(true,null);
                 }
             }, new Realm.Transaction.OnError() {

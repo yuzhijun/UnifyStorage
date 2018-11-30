@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.winning.unifystorage_core.model.DbResult;
 
@@ -31,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 List<User> users = new ArrayList<>();
                 User user = new User();
-                user.setId(1);
                 user.setAge("20");
                 user.setName("sharkchao");
                 user.setSex("男");
@@ -39,12 +39,12 @@ public class MainActivity extends AppCompatActivity {
                 mApiDataBase.saveUser(users).registerCallback(new DbResult.DbResultCallback() {
                     @Override
                     public void onSuccess(int count) {
-
+                        Toast.makeText(MainActivity.this, "成功!"+count, Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onError(Throwable error) {
-
+                        Toast.makeText(MainActivity.this, "失败"+error.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
