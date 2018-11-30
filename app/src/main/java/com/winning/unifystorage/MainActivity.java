@@ -11,6 +11,8 @@ import com.winning.unifystorage_core.model.DbResult;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.realm.RealmResults;
+
 public class MainActivity extends AppCompatActivity {
     private Button btnInsert;
     private Button btnFind;
@@ -36,7 +38,17 @@ public class MainActivity extends AppCompatActivity {
         btnFind.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mApiDataBase.findUser("sharkchao", 10);
+                mApiDataBase.findUser("sharkchao", 10)
+                .registerDbFindCallBack(new DbResult.DbFindCallBack() {
+                    @Override
+                    public void onFirstFindResult(RealmResults realmResults) {
+                        realmResults.size();
+                    }
+                    @Override
+                    public void onChange(RealmResults realmResults) {
+
+                    }
+                });
             }
         });
     }

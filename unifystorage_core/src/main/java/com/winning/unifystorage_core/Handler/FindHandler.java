@@ -4,6 +4,7 @@ import com.winning.unifystorage_core.HandlerAdapter;
 import com.winning.unifystorage_core.UStorage;
 import com.winning.unifystorage_core.Utils.CommonUtil;
 import com.winning.unifystorage_core.annotations.FIND;
+import com.winning.unifystorage_core.model.DbResult;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
@@ -15,6 +16,8 @@ import java.util.regex.Pattern;
 
 import javax.annotation.Nonnull;
 
+import io.realm.OrderedCollectionChangeSet;
+import io.realm.OrderedRealmCollectionChangeListener;
 import io.realm.RealmObject;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
@@ -45,6 +48,7 @@ public class FindHandler extends HandlerAdapter {
     private String distinct;
     private int limit;
     private boolean eager;
+    private DbResult dbResult;
 
     private FindHandler(Annotation[] annotations, Class<? extends RealmObject> table){
         this.table = table;
@@ -72,7 +76,8 @@ public class FindHandler extends HandlerAdapter {
 
     @SuppressWarnings("unchecked")
     @Override
-    public RealmResults<? extends RealmObject> invoke(Object[] args, Type[] parameterTypes, Annotation[][] parameterAnnotationsArray) {
+    public DbResult invoke(Object[] args, Type[] parameterTypes, Annotation[][] parameterAnnotationsArray) {
+        dbResult = new DbResult();
         try{
             RealmQuery<? extends RealmObject> query = UStorage.realm.where(this.table);
             RealmQuery<? extends RealmObject> whereFilteredQuery = whereFilter(query, args , parameterTypes);
@@ -89,15 +94,18 @@ public class FindHandler extends HandlerAdapter {
                 whereFilteredQuery.distinct(distinct);
             }
 
-            RealmResults<? extends RealmObject> result = whereFilteredQuery.findAll();
-            if (result.isLoaded()) {
-                return result;
-            }
+            RealmResults result = whereFilteredQuery.findAllAsync();
+            result.addChangeListener(new OrderedRealmCollectionChangeListener<RealmResults>() {
+                @Override
+                public void onChange(RealmResults realmResults, OrderedCollectionChangeSet changeSet) {
+                    dbResult.setDbFindCallBack(realmResults, changeSet);
+                }
+            });
         }catch (Exception e){
             e.printStackTrace();
         }
 
-        return null;
+        return dbResult;
     }
 
     private RealmQuery<? extends RealmObject> whereFilter(RealmQuery<? extends RealmObject> query,Object[] args, Type[] parameterTypes){

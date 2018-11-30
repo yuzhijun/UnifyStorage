@@ -9,9 +9,6 @@ import com.winning.unifystorage_core.model.DbResult;
 
 import java.util.List;
 
-import io.realm.RealmObject;
-import io.realm.RealmResults;
-
 /**
  * 2018/11/29
  * Created by SharkChao
@@ -51,5 +48,5 @@ public interface ApiDataBase {
 
     @DB(table = User.class)
     @FIND(where = "name = ? and age > ?",limit = 10,orderBy = "age")
-    RealmResults<? extends RealmObject> findUser(String name, int age);
+    DbResult findUser(String name, int age);
 }

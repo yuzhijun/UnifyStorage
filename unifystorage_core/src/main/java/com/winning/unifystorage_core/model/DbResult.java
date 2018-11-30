@@ -1,5 +1,8 @@
 package com.winning.unifystorage_core.model;
 
+import io.realm.OrderedCollectionChangeSet;
+import io.realm.RealmResults;
+
 /**
  * 2018/11/30
  * Created by SharkChao
@@ -9,6 +12,7 @@ package com.winning.unifystorage_core.model;
 public class DbResult {
     private int count;
     private DbResultCallback mResultCallback;
+    private DbFindCallBack mDbFindCallBack;
     private boolean isSuccess;
     private Throwable mThrowable;
     private boolean hasObserver;
@@ -24,6 +28,25 @@ public class DbResult {
     public interface DbResultCallback{
         void onSuccess(int count);
         void onError(Throwable error);
+    }
+
+    public interface DbFindCallBack{
+        void onFirstFindResult(RealmResults realmResults);
+        void onChange(RealmResults realmResults);
+    }
+
+    public void registerDbFindCallBack(DbFindCallBack dbFindCallBack){
+        this.mDbFindCallBack = dbFindCallBack;
+    }
+
+    public void setDbFindCallBack(RealmResults realmResults,OrderedCollectionChangeSet changeSet){
+        if (null != mDbFindCallBack){
+            if (null == changeSet){
+                mDbFindCallBack.onFirstFindResult(realmResults);
+            }else {
+                mDbFindCallBack.onChange(realmResults);
+            }
+        }
     }
 
     public void registerCallback(DbResultCallback callback){
