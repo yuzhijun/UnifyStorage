@@ -27,7 +27,7 @@ public final class UStorage {
     private UStorage(Builder builder){
     }
 
-    static void initialize(Application context){
+    public static void initialize(Application context){
         application = context;
         registerActivityListener();
         Realm.init(application);
@@ -38,7 +38,7 @@ public final class UStorage {
     }
 
     @SuppressWarnings("unchecked") // Single-interface proxy creation guarded by parameter safety.
-    public <T> T create(final Class<T> service) {
+    public <T>  T create(final Class<T> service) {
         CommonUtil.validateServiceInterface(service);
 
         return (T) Proxy.newProxyInstance(service.getClassLoader(), new Class<?>[]{service},
@@ -96,7 +96,7 @@ public final class UStorage {
             return this;
         }
 
-        UStorage build() {
+        public UStorage build() {
             configDB();
 
             return new UStorage(this);
