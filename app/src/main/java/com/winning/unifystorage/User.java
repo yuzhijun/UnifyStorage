@@ -1,6 +1,7 @@
 package com.winning.unifystorage;
 
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * 2018/11/29
@@ -9,9 +10,19 @@ import io.realm.RealmObject;
  * https://github.com/sharkchao
  */
 public class User extends RealmObject {
+    @PrimaryKey
+    private int id;
     private String name;
     private String age;
     private String sex;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
