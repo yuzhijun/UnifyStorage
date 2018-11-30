@@ -2,7 +2,7 @@ package com.winning.unifystorage_core.Handler;
 
 import com.winning.unifystorage_core.HandlerAdapter;
 import com.winning.unifystorage_core.UStorage;
-import com.winning.unifystorage_core.annotations.SAVE;
+import com.winning.unifystorage_core.annotations.FIELD;
 import com.winning.unifystorage_core.exception.ErrorParamsException;
 import com.winning.unifystorage_core.model.DbResult;
 
@@ -32,7 +32,7 @@ public class SaveHandler extends HandlerAdapter {
             UStorage.realm.executeTransactionAsync(new Realm.Transaction() {
                 @Override
                 public void execute(Realm realm) {
-                    if (parameterTypes[0] instanceof  RealmObject && parameterTypes[0].getClass().isArray()){
+                    if (parameterTypes[0].getClass().equals(RealmObject.class) && parameterTypes[0].getClass().isArray()){
                         List<RealmObject> realmObjects = realm.copyToRealm(Arrays.asList((RealmObject[]) args[0]));
                         result.setCount(realmObjects.size());
                     } else if (parameterTypes[0] instanceof  RealmObject){
@@ -73,8 +73,8 @@ public class SaveHandler extends HandlerAdapter {
         if (parameterAnnotationsArray.length == 1
                 && parameterAnnotationsArray[0].length == 1
                 && args.length == 1
-                && parameterAnnotationsArray[0][0].annotationType().equals(SAVE.class)
-                && parameterTypes[0] instanceof RealmObject){
+                && parameterAnnotationsArray[0][0].annotationType().equals(FIELD.class)
+               ){
             return true;
         }
         throw new ErrorParamsException("save method params not valid");

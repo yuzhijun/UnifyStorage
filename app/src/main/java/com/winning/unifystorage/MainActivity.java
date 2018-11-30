@@ -4,6 +4,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
+
+import com.winning.unifystorage_core.model.DbResult;
 
 public class MainActivity extends AppCompatActivity {
     private Button btnInsert;
@@ -28,7 +31,17 @@ public class MainActivity extends AppCompatActivity {
                 user.setAge("10");
                 user.setName("sharkchao");
                 user.setSex("男");
-                mApiDataBase.saveUser(user);
+                mApiDataBase.saveUser(user).registerCallback(new DbResult.DbResultCallback() {
+                    @Override
+                    public void onSuccess(int count) {
+                        Toast.makeText(MainActivity.this, "插入数据成功", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onError(Throwable error) {
+                        Toast.makeText(MainActivity.this, "插入数据失败"+error.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
         btnFind.setOnClickListener(new View.OnClickListener() {
