@@ -1,5 +1,7 @@
 package com.winning.unifystorage_core.Handler;
 
+import android.support.annotation.NonNull;
+
 import com.winning.unifystorage_core.HandlerAdapter;
 import com.winning.unifystorage_core.UStorage;
 import com.winning.unifystorage_core.Utils.CommonUtil;
@@ -13,6 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import io.realm.Realm;
+import io.realm.RealmModel;
 import io.realm.RealmObject;
 
 public class SaveHandler extends HandlerAdapter {
@@ -31,13 +34,13 @@ public class SaveHandler extends HandlerAdapter {
         if (checkIfValid(args,parameterTypes,parameterAnnotationsArray)){
             UStorage.realm.executeTransactionAsync(new Realm.Transaction() {
                 @Override
-                public void execute(Realm realm) {
+                public void execute(@NonNull Realm realm) {
                     Class<?> rawType = CommonUtil.getRawType(parameterTypes[0]);
                     if (RealmObject.class.isAssignableFrom(rawType) && rawType.isArray()){
                         List<RealmObject> realmObjects = realm.copyToRealm(Arrays.asList((RealmObject[]) args[0]));
                         result.setCount(realmObjects.size());
                     } else if (RealmObject.class.isAssignableFrom(rawType)){
-                         realm.copyToRealm(((RealmObject) args[0]));
+                        realm.copyToRealm((RealmModel) args[0]);
                         result.setCount(1);
                     } else if (List.class.isAssignableFrom(rawType)){
                         List<RealmObject> realmObjects = realm.copyToRealm((List<RealmObject>) args[0]);
