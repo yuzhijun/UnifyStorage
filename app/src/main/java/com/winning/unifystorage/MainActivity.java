@@ -6,16 +6,28 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.winning.unifystorage.data.UserData;
+import com.winning.unifystorage.model.Fake;
+import com.winning.unifystorage.model.User;
 import com.winning.unifystorage_core.model.DbResult;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import io.realm.RealmObject;
 import io.realm.RealmResults;
 
-public class MainActivity extends AppCompatActivity {
-    private Button btnInsert;
-    private Button btnDelete;
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+    private Button saveUserByObject;
+    private Button saveUsersByList;
+    private Button saveUsersByArray;
+    private Button saveOrUpdateObject;
+    private Button saveOrUpdateUsersByList;
+    private Button saveOrUpdateUsersByArray;
+    private Button deleteUsersByObject;
+    private Button deleteUsersByArray;
+    private Button deleteUsersByList;
+    private Button deleteUsersByQuery;
     private Button btnFindAll;
     private Button btnFindUser;
     private Button btnFindUserByIn;
@@ -29,23 +41,41 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        btnInsert = findViewById(R.id.btnInsert);
+        saveUserByObject = findViewById(R.id.saveUserByObject);
+        saveUsersByList = findViewById(R.id.saveUsersByList);
+        saveUsersByArray = findViewById(R.id.saveUsersByArray);
+        saveOrUpdateObject = findViewById(R.id.saveOrUpdateObject);
+        saveOrUpdateUsersByList = findViewById(R.id.saveOrUpdateUsersByList);
+        saveOrUpdateUsersByArray = findViewById(R.id.saveOrUpdateUsersByArray);
+
         btnFindAll = findViewById(R.id.btnFindAll);
         btnFindUser = findViewById(R.id.btnFindUser);
         btnFindUserByIn = findViewById(R.id.btnFindUserByIn);
         btnFindUserByContains = findViewById(R.id.btnFindUserByContains);
         btnFindUserByLike = findViewById(R.id.btnFindUserByLike);
         btnFindUserByNotNull = findViewById(R.id.btnFindUserByNotNull);
-        btnDelete = findViewById(R.id.btnDelete);
+
+        deleteUsersByObject = findViewById(R.id.deleteUsersByObject);
+        deleteUsersByArray = findViewById(R.id.deleteUsersByArray);
+        deleteUsersByList = findViewById(R.id.deleteUsersByList);
+        deleteUsersByQuery = findViewById(R.id.deleteUsersByQuery);
+
+
+
+        saveUserByObject.setOnClickListener(this);
+        saveUsersByArray.setOnClickListener(this);
+        saveUsersByList.setOnClickListener(this);
+        saveOrUpdateObject.setOnClickListener(this);
+        saveOrUpdateUsersByArray.setOnClickListener(this);
+        saveOrUpdateUsersByList.setOnClickListener(this);
+        deleteUsersByObject.setOnClickListener(this);
+        deleteUsersByArray.setOnClickListener(this);
+        deleteUsersByList.setOnClickListener(this);
+        deleteUsersByQuery.setOnClickListener(this);
 
         mApiDataBase = ApiServiceModule.getInstance().provideApiService(ApiDataBase.class);
 
-        btnInsert.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveUserByObject();
-            }
-        });
+
         btnFindAll.setOnClickListener(view -> mApiDataBase.findAll().registerDbFindCallBack(new DbResult.DbFindCallBack() {
             @Override
             public void onFirstFindResult(RealmResults realmResults) {
@@ -77,12 +107,12 @@ public class MainActivity extends AppCompatActivity {
             mApiDataBase.findUserByIn(users).registerDbFindCallBack(new DbResult.DbFindCallBack() {
                 @Override
                 public void onFirstFindResult(RealmResults realmResults) {
-                    realmResults.size();
+                    Toast.makeText(MainActivity.this, "realmResult"+realmResults.size(), Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
                 public void onChange(RealmResults realmResults) {
-
+                    Toast.makeText(MainActivity.this, "realmResult"+realmResults.size(), Toast.LENGTH_SHORT).show();
                 }
             });
         });
@@ -124,12 +154,8 @@ public class MainActivity extends AppCompatActivity {
         }));
 
 
-        btnDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                deleteUserByObject();
-            }
-        });
+
+
     }
 
     private void saveUserByObject(){
@@ -137,11 +163,14 @@ public class MainActivity extends AppCompatActivity {
         user.setAge("20");
         user.setName("sharkchao");
         user.setSex("男");
-        mApiDataBase.saveUser(user).registerCallback(new DbResult.DbResultCallback() {
+        mApiDataBase.saveUser(user).registerCallback(new DbResult.DbResultCallback<RealmObject>() {
+
             @Override
-            public void onSuccess(int count) {
+            public void onSuccess(int count, RealmObject result) {
+                UserData.setUser((User) result);
                 Toast.makeText(MainActivity.this, "成功!"+count, Toast.LENGTH_SHORT).show();
             }
+
             @Override
             public void onError(Throwable error) {
                 Toast.makeText(MainActivity.this, "失败"+error.getMessage(), Toast.LENGTH_SHORT).show();
@@ -163,11 +192,13 @@ public class MainActivity extends AppCompatActivity {
 
         list.add(user1);
         list.add(user2);
-        mApiDataBase.saveUsersByList(list).registerCallback(new DbResult.DbResultCallback() {
+        mApiDataBase.saveUsersByList(list).registerCallback(new DbResult.DbResultCallback<List<RealmObject>>() {
+
             @Override
-            public void onSuccess(int count) {
+            public void onSuccess(int count, List<RealmObject> result) {
                 Toast.makeText(MainActivity.this, "成功!"+count, Toast.LENGTH_SHORT).show();
             }
+
             @Override
             public void onError(Throwable error) {
                 Toast.makeText(MainActivity.this, "失败"+error.getMessage(), Toast.LENGTH_SHORT).show();
@@ -189,11 +220,13 @@ public class MainActivity extends AppCompatActivity {
 
         users[0] = user1;
         users[1] = user2;
-        mApiDataBase.saveUsersByArray(users).registerCallback(new DbResult.DbResultCallback() {
+        mApiDataBase.saveUsersByArray(users).registerCallback(new DbResult.DbResultCallback<RealmObject>() {
+
             @Override
-            public void onSuccess(int count) {
+            public void onSuccess(int count, RealmObject result) {
                 Toast.makeText(MainActivity.this, "成功!"+count, Toast.LENGTH_SHORT).show();
             }
+
             @Override
             public void onError(Throwable error) {
                 Toast.makeText(MainActivity.this, "失败"+error.getMessage(), Toast.LENGTH_SHORT).show();
@@ -202,11 +235,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void saveFake(){
-        mApiDataBase.saveFake(new Fake()).registerCallback(new DbResult.DbResultCallback() {
+        mApiDataBase.saveFake(new Fake()).registerCallback(new DbResult.DbResultCallback<RealmObject>() {
+
             @Override
-            public void onSuccess(int count) {
+            public void onSuccess(int count, RealmObject result) {
                 Toast.makeText(MainActivity.this, "成功!"+count, Toast.LENGTH_SHORT).show();
             }
+
             @Override
             public void onError(Throwable error) {
                 Toast.makeText(MainActivity.this, "失败"+error.getMessage(), Toast.LENGTH_SHORT).show();
@@ -219,11 +254,13 @@ public class MainActivity extends AppCompatActivity {
         user.setAge("20");
         user.setName("小熊");
         user.setSex("男");
-        mApiDataBase.saveOrUpdateUser(user).registerCallback(new DbResult.DbResultCallback() {
+        mApiDataBase.saveOrUpdateUser(user).registerCallback(new DbResult.DbResultCallback<RealmObject>() {
+
             @Override
-            public void onSuccess(int count) {
+            public void onSuccess(int count, RealmObject result) {
                 Toast.makeText(MainActivity.this, "成功!"+count, Toast.LENGTH_SHORT).show();
             }
+
             @Override
             public void onError(Throwable error) {
                 Toast.makeText(MainActivity.this, "失败"+error.getMessage(), Toast.LENGTH_SHORT).show();
@@ -247,11 +284,13 @@ public class MainActivity extends AppCompatActivity {
 
         list.add(user1);
         list.add(user2);
-        mApiDataBase.saveOrUpdateUsersByList(list).registerCallback(new DbResult.DbResultCallback() {
+        mApiDataBase.saveOrUpdateUsersByList(list).registerCallback(new DbResult.DbResultCallback<List<RealmObject>>() {
+
             @Override
-            public void onSuccess(int count) {
+            public void onSuccess(int count, List<RealmObject> result) {
                 Toast.makeText(MainActivity.this, "成功!"+count, Toast.LENGTH_SHORT).show();
             }
+
             @Override
             public void onError(Throwable error) {
                 Toast.makeText(MainActivity.this, "失败"+error.getMessage(), Toast.LENGTH_SHORT).show();
@@ -276,11 +315,13 @@ public class MainActivity extends AppCompatActivity {
 
         users[0] = user1;
         users[1] = user2;
-        mApiDataBase.saveOrUpdateUsersByArray(users).registerCallback(new DbResult.DbResultCallback() {
+        mApiDataBase.saveOrUpdateUsersByArray(users).registerCallback(new DbResult.DbResultCallback<List<RealmObject>>() {
+
             @Override
-            public void onSuccess(int count) {
+            public void onSuccess(int count, List<RealmObject> result) {
                 Toast.makeText(MainActivity.this, "成功!"+count, Toast.LENGTH_SHORT).show();
             }
+
             @Override
             public void onError(Throwable error) {
                 Toast.makeText(MainActivity.this, "失败"+error.getMessage(), Toast.LENGTH_SHORT).show();
@@ -289,14 +330,41 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void deleteUserByObject(){
-        User user = new User();
-        user.setId("ef00ac44-4dcb-49a6-816a-fd4b8afb7f9c");
-        user.setAge("20");
-        user.setName("sharkchao");
-        user.setSex("男");
-        mApiDataBase.deleteUsersByObject(user).registerCallback(new DbResult.DbResultCallback() {
+
+        mApiDataBase.deleteUsersByObject(UserData.getUser()).registerCallback(new DbResult.DbResultCallback<RealmObject>() {
+
             @Override
-            public void onSuccess(int count) {
+            public void onSuccess(int count, RealmObject result) {
+                Toast.makeText(MainActivity.this, "成功!"+count, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(Throwable error) {
+                Toast.makeText(MainActivity.this, "失败"+error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void deleteUsersByArray(){
+
+        mApiDataBase.deleteUsersByArray(UserData.getUserArray()).registerCallback(new DbResult.DbResultCallback<RealmObject>() {
+
+            @Override
+            public void onSuccess(int count, RealmObject result) {
+                Toast.makeText(MainActivity.this, "成功!"+count, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(Throwable error) {
+                Toast.makeText(MainActivity.this, "失败"+error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void deleteUsersByList(){
+
+        mApiDataBase.deleteUsersByList(UserData.getUserList()).registerCallback(new DbResult.DbResultCallback<RealmObject>() {
+
+            @Override
+            public void onSuccess(int count, RealmObject result) {
                 Toast.makeText(MainActivity.this, "成功!"+count, Toast.LENGTH_SHORT).show();
             }
 
@@ -307,4 +375,55 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void deleteUsersByQuery(){
+
+        mApiDataBase.deleteUsersByQuery().registerCallback(new DbResult.DbResultCallback<RealmObject>() {
+
+            @Override
+            public void onSuccess(int count, RealmObject result) {
+                Toast.makeText(MainActivity.this, "成功!"+count, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(Throwable error) {
+                Toast.makeText(MainActivity.this, "失败"+error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.saveUserByObject:
+                saveUserByObject();
+                break;
+            case R.id.saveUsersByList:
+                saveUsersByList();
+                break;
+            case R.id.saveUsersByArray:
+                saveUsersByArray();
+                break;
+            case R.id.saveOrUpdateObject:
+                saveOrUpdateObject();
+                break;
+            case R.id.saveOrUpdateUsersByList:
+                saveOrUpdateUsersByList();
+                break;
+            case R.id.saveOrUpdateUsersByArray:
+                saveOrUpdateUsersByArray();
+                break;
+            case R.id.deleteUsersByObject:
+                deleteUserByObject();
+                break;
+            case R.id.deleteUsersByArray:
+                deleteUsersByArray();
+                break;
+            case R.id.deleteUsersByList:
+                deleteUsersByList();
+                break;
+            case R.id.deleteUsersByQuery:
+                deleteUsersByQuery();
+                break;
+        }
+    }
 }

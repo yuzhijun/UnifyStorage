@@ -1,33 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<android.support.v4.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
     <Button
-        android:id="@+id/btnInsert"
+        android:id="@+id/saveUserByObject"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="插入"
+        android:text="saveUserByObject"
+        android:textColor="@color/colorPrimary"
+        android:textSize="@dimen/font_smaller"
+        android:textAllCaps="false"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
+    <Button
+        android:id="@+id/saveUsersByList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="saveUsersByList"
+        android:textAllCaps="false"
+        android:textColor="@color/colorPrimary"
+        android:textSize="@dimen/font_smaller"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/saveUserByObject"/>
+    <Button
+        android:id="@+id/saveUsersByArray"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorPrimary"
+        android:textAllCaps="false"
+        android:textSize="@dimen/font_smaller"
+        android:text="saveUsersByArray"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/saveUsersByList"/>
+    <Button
+        android:id="@+id/saveOrUpdateObject"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:textSize="@dimen/font_smaller"
+        android:textColor="@color/colorPrimaryDark"
+        android:text="saveOrUpdateObject"
+        android:layout_marginTop="@dimen/spacing_20"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/saveUsersByArray"/>
+    <Button
+        android:id="@+id/saveOrUpdateUsersByList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="@dimen/font_smaller"
+        android:text="saveOrUpdateUsersByList"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/saveOrUpdateObject"
+       />
+    <Button
+        android:id="@+id/saveOrUpdateUsersByArray"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="@dimen/font_smaller"
+        android:text="saveOrUpdateUsersByArray"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/saveOrUpdateUsersByList"/>
 
     <Button
         android:id="@+id/btnFindAll"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textAllCaps="false"
         android:text="findAll"
-        app:layout_constraintLeft_toRightOf="@id/btnInsert"
+        app:layout_constraintLeft_toRightOf="@id/saveUserByObject"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
     <Button
         android:id="@+id/btnFindUser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textAllCaps="false"
         android:text="findUser"
-        app:layout_constraintLeft_toRightOf="@id/btnInsert"
+        app:layout_constraintLeft_toRightOf="@id/saveUserByObject"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginTop="5dp"
         app:layout_constraintTop_toBottomOf="@id/btnFindAll"
@@ -37,8 +101,9 @@
         android:id="@+id/btnFindUserByIn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textAllCaps="false"
         android:text="findUserByIn"
-        app:layout_constraintLeft_toRightOf="@id/btnInsert"
+        app:layout_constraintLeft_toRightOf="@id/saveUserByObject"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginTop="5dp"
         app:layout_constraintTop_toBottomOf="@id/btnFindUser"
@@ -48,27 +113,22 @@
         android:id="@+id/btnFindUserByContains"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textAllCaps="false"
         android:text="findUserByContains"
-        app:layout_constraintLeft_toRightOf="@id/btnInsert"
+        app:layout_constraintLeft_toRightOf="@id/saveUserByObject"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginTop="5dp"
         app:layout_constraintTop_toBottomOf="@id/btnFindUserByIn"
         />
 
-    <Button
-        android:id="@+id/btnDelete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="删除"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnInsert"/>
 
     <Button
         android:id="@+id/btnFindUserByLike"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textAllCaps="false"
         android:text="findUserByLike"
-        app:layout_constraintLeft_toRightOf="@id/btnInsert"
+        app:layout_constraintLeft_toRightOf="@id/saveUserByObject"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginTop="5dp"
         app:layout_constraintTop_toBottomOf="@id/btnFindUserByContains"
@@ -78,11 +138,54 @@
         android:id="@+id/btnFindUserByNotNull"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textAllCaps="false"
         android:text="findUserByNotNull"
-        app:layout_constraintLeft_toRightOf="@id/btnInsert"
+        app:layout_constraintLeft_toRightOf="@id/saveUserByObject"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginTop="5dp"
         app:layout_constraintTop_toBottomOf="@id/btnFindUserByLike"
         />
+    <Button
+        android:id="@+id/deleteUsersByObject"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:text="deleteUsersByObject"
+        android:textSize="@dimen/font_smaller"
+        android:textColor="@color/red"
+        android:layout_marginTop="@dimen/spacing_20"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/saveOrUpdateUsersByArray"/>
+    <Button
+        android:id="@+id/deleteUsersByArray"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:text="deleteUsersByArray"
+        android:textSize="@dimen/font_smaller"
+        android:textColor="@color/red"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/deleteUsersByObject"/>
+    <Button
+        android:id="@+id/deleteUsersByList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:text="deleteUsersByList"
+        android:textSize="@dimen/font_smaller"
+        android:textColor="@color/red"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/deleteUsersByArray"/>
+    <Button
+        android:id="@+id/deleteUsersByQuery"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:text="deleteUsersByQuery"
+        android:textSize="@dimen/font_smaller"
+        android:textColor="@color/red"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/deleteUsersByList"/>
 
 </android.support.constraint.ConstraintLayout>
+</android.support.v4.widget.NestedScrollView>
