@@ -49,6 +49,10 @@ public interface ApiDataBase {
     DbResult saveOrUpdateUsersByArray(@Model User[] user);
 
     @DB(table = User.class)
+    @FIND
+    DbResult findAll();
+
+    @DB(table = User.class)
     @FIND(where = "name = ? and age > ?",limit = 10,orderBy = "age")
     DbResult findUser(String name, int age);
 
@@ -71,4 +75,17 @@ public interface ApiDataBase {
     @DB(table = User.class)
     @DELETE
     DbResult deleteUsersByList(@Model List<User> user);
+    DbResult findUserByIn(List<String> users);
+
+    @DB(table = User.class)
+    @FIND(where = "name contains ?",distinct = "name")
+    DbResult findUserByContains(String name);
+
+    @DB(table = User.class)
+    @FIND(where = "name like ? and age > ?",distinct = "name")
+    DbResult findUserByLike(String name, int age);
+
+    @DB(table = User.class)
+    @FIND(where = "? notnull",limit = 2)
+    DbResult findUserByNotNull(String name);
 }
