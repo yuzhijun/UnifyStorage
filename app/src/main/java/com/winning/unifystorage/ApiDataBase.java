@@ -49,4 +49,8 @@ public interface ApiDataBase {
     @DB(table = User.class)
     @FIND(where = "name = ? and age > ?",limit = 10,orderBy = "age")
     DbResult findUser(String name, int age);
+
+    @DB(table = User.class)
+    @FIND(where = "name in ?",limit = 10)
+    DbResult findUsers(List<String> users);
 }

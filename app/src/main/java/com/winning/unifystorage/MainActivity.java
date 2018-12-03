@@ -38,12 +38,28 @@ public class MainActivity extends AppCompatActivity {
         btnFind.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mApiDataBase.findUser("sharkchao", 10)
-                .registerDbFindCallBack(new DbResult.DbFindCallBack() {
+//                mApiDataBase.findUser("sharkchao", 10)
+//                .registerDbFindCallBack(new DbResult.DbFindCallBack() {
+//                    @Override
+//                    public void onFirstFindResult(RealmResults realmResults) {
+//                        realmResults.size();
+//                    }
+//                    @Override
+//                    public void onChange(RealmResults realmResults) {
+//
+//                    }
+//                });
+
+                List<String> users = new ArrayList<>();
+                users.add("yuzhijun");
+                users.add("sharkchao");
+
+                mApiDataBase.findUsers(users).registerDbFindCallBack(new DbResult.DbFindCallBack() {
                     @Override
                     public void onFirstFindResult(RealmResults realmResults) {
                         realmResults.size();
                     }
+
                     @Override
                     public void onChange(RealmResults realmResults) {
 
