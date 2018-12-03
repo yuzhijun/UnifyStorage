@@ -12,6 +12,8 @@ import com.winning.unifystorage_core.model.DbResult;
 
 import java.util.List;
 
+import io.realm.RealmResults;
+
 /**
  * 2018/11/29
  * Created by SharkChao
@@ -67,15 +69,15 @@ public interface ApiDataBase {
 
     @DB(table = User.class)
     @DELETE
-    DbResult deleteUsersByObject(@Model User user);
+    DbResult deleteUsersByObject(@Model RealmResults<User> user);
 
-    @DB(table = User.class)
-    @DELETE
-    DbResult deleteUsersByArray(@Model User[] user);
-
-    @DB(table = User.class)
-    @DELETE
-    DbResult deleteUsersByList(@Model List<User> user);
+//    @DB(table = User.class)
+//    @DELETE
+//    DbResult deleteUsersByArray(@Model User[] user);
+//
+//    @DB(table = User.class)
+//    @DELETE
+//    DbResult deleteUsersByList(@Model List<User> user);
 
     @DB(table = User.class)
     @FIND(where = "name in ?")

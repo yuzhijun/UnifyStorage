@@ -15,13 +15,11 @@ import com.winning.unifystorage_core.model.DbResult;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import io.realm.OrderedCollectionChangeSet;
 import io.realm.OrderedRealmCollectionChangeListener;
 import io.realm.Realm;
-import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
@@ -89,38 +87,20 @@ public class DeleteHandler extends HandlerAdapter {
     }
 
     private DbResult deleteByModel(final DbResult dbResult, final Object[] args, final Type[] parameterTypes){
-        UStorage.realm.executeTransactionAsync(new Realm.Transaction() {
+        UStorage.realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(@NonNull Realm realm) {
 
                 Class<?> rawType = CommonUtil.getRawType(parameterTypes[0]);
-                if (RealmObject[].class.isAssignableFrom(rawType) && rawType.isArray()){
-
-                    RealmList realmList = new RealmList( Arrays.asList((RealmObject[]) args[0]));
-                    realmList.deleteAllFromRealm();
-                    dbResult.setCount(realmList.size());
-                } else if (RealmObject.class.isAssignableFrom(rawType)){
-                    RealmObject realmObject = (RealmObject) args[0];
-                    realmObject.deleteFromRealm();
-                    dbResult.setCount(1);
-                } else if (List.class.isAssignableFrom(rawType)){
-                    RealmList realmList = new RealmList(args[0]);
-                    realmList.deleteAllFromRealm();
-                    dbResult.setCount(realmList.size());
+                 if (RealmResults.class.isAssignableFrom(rawType)){
+                    RealmResults realmResults = (RealmResults) args[0];
+                     dbResult.setCount(realmResults.size());
+                     boolean success = realmResults.deleteAllFromRealm();
+                    dbResult.setResultCallback(success,new Throwable("fail to delete data"));
                 }else {
-                    throw new ErrorParamsException("save method parameter is invalid,please check your code");
+                    dbResult.setCount(0);
+                    dbResult.setResultCallback(false,new Throwable("save method parameter is invalid,please check your code"));
                 }
-            }
-        }, new Realm.Transaction.OnSuccess() {
-            @Override
-            public void onSuccess() {
-
-                dbResult.setResultCallback(true,null);
-            }
-        }, new Realm.Transaction.OnError() {
-            @Override
-            public void onError(Throwable error) {
-                dbResult.setResultCallback(false,error);
             }
         });
         return dbResult;
@@ -132,15 +112,18 @@ public class DeleteHandler extends HandlerAdapter {
             RealmQuery<? extends RealmObject> whereFilteredQuery = FindConditionUtil.whereFilter(where, query, args, parameterTypes);
 
             RealmQuery<? extends RealmObject> otherFilteredQuery = FindConditionUtil.otherFilter(whereFilteredQuery, orderBy, limit, distinct);
-            RealmResults result = otherFilteredQuery.findAllAsync();
+            final RealmResults result = otherFilteredQuery.findAllAsync();
+
             result.addChangeListener(new OrderedRealmCollectionChangeListener<RealmResults>() {
                 @Override
                 public void onChange(RealmResults realmResults, OrderedCollectionChangeSet changeSet) {
-                    if (realmResults != null && changeSet == null) {
+                    if (realmResults != null) {
                         deleteByQueryTransaction(realmResults);
                     }
+                    result.removeAllChangeListeners();
                 }
             });
+
         } catch (Exception e) {
             e.printStackTrace();
             dbResult.setResultCallback(false, e.getCause());
@@ -152,8 +135,8 @@ public class DeleteHandler extends HandlerAdapter {
             @Override
             public void execute(@NonNull Realm realm) {
                 if (realmResults.size() > 0){
-                    boolean success = realmResults.deleteAllFromRealm();
                     dbResult.setCount(realmResults.size());
+                    boolean success = realmResults.deleteAllFromRealm();
                     dbResult.setResultCallback(success,null);
                 }else {
                     dbResult.setCount(0);

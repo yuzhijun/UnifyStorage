@@ -36,18 +36,16 @@ public class SaveOrUpdateHandler extends HandlerAdapter {
                     Class<?> rawType = CommonUtil.getRawType(parameterTypes[0]);
                     if (RealmObject[].class.isAssignableFrom(rawType) && rawType.isArray()){
                         List<RealmObject> realmObjects = realm.copyToRealmOrUpdate(Arrays.asList((RealmObject[]) args[0]));
-                        result.setResult(realmObjects);
                         result.setCount(realmObjects.size());
                     } else if (RealmObject.class.isAssignableFrom(rawType)){
                         RealmObject realmObject = realm.copyToRealmOrUpdate(((RealmObject) args[0]));
-                        result.setResult(realmObject);
                         result.setCount(1);
                     } else if (List.class.isAssignableFrom(rawType)){
                         List<RealmObject> realmObjects = realm.copyToRealmOrUpdate((List<RealmObject>) args[0]);
-                        result.setResult(realmObjects);
                         result.setCount(realmObjects.size());
                     }else {
-                        throw new ErrorParamsException("save or update method parameter is invalid,please check your code");
+                        result.setCount(0);
+                        result.setResultCallback(false,new Throwable("save or update method parameter is invalid,please check your code"));
                     }
                 }
             }, new Realm.Transaction.OnSuccess() {

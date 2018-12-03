@@ -30,7 +30,7 @@ public class SaveHandler extends HandlerAdapter {
 
     @Override
     public DbResult invoke(final Object[] args, final Type[] parameterTypes, Annotation[][] parameterAnnotationsArray) {
-       result = new DbResult();
+        result = new DbResult();
         if (checkIfValid(args,parameterAnnotationsArray)){
             UStorage.realm.executeTransactionAsync(new Realm.Transaction() {
                 @Override
@@ -39,18 +39,16 @@ public class SaveHandler extends HandlerAdapter {
                     Class<?> rawType = CommonUtil.getRawType(parameterTypes[0]);
                     if (RealmObject[].class.isAssignableFrom(rawType) && rawType.isArray()){
                         List<RealmObject> realmObjects = realm.copyToRealm(Arrays.asList((RealmObject[]) args[0]));
-                        result.setResult(realmObjects);
                         result.setCount(realmObjects.size());
                     } else if (RealmObject.class.isAssignableFrom(rawType)){
-                        RealmModel realmModel = realm.copyToRealm((RealmModel) args[0]);
-                        result.setResult(realmModel);
+                         realm.copyToRealm((RealmModel) args[0]);
                         result.setCount(1);
                     } else if (List.class.isAssignableFrom(rawType)){
                         List<RealmObject> realmObjects = realm.copyToRealm((List<RealmObject>) args[0]);
-                        result.setResult(realmObjects);
                         result.setCount(realmObjects.size());
                     }else {
-                        throw new ErrorParamsException("save method parameter is invalid,please check your code");
+                        result.setCount(0);
+                        result.setResultCallback(false,new Throwable("save method parameter is invalid,please check your code"));
                     }
                 }
             }, new Realm.Transaction.OnSuccess() {

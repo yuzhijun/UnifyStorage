@@ -26,8 +26,8 @@ public class DbResult<T>{
         this.count = count;
     }
 
-    public interface DbResultCallback<T>{
-        void onSuccess(int count,T result);
+    public interface DbResultCallback{
+        void onSuccess(int count);
         void onError(Throwable error);
     }
 
@@ -62,7 +62,7 @@ public class DbResult<T>{
         if (mResultCallback != null){
             hasObserver = true;
             if (isSuccess){
-                mResultCallback.onSuccess(count,result);
+                mResultCallback.onSuccess(count);
             }else if (throwable != null){
                 mResultCallback.onError(throwable);
             }
