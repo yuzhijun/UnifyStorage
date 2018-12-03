@@ -1,8 +1,10 @@
 package com.winning.unifystorage;
 
 import com.winning.unifystorage_core.annotations.DB;
-import com.winning.unifystorage_core.annotations.FIELD;
+import com.winning.unifystorage_core.annotations.DELETE;
 import com.winning.unifystorage_core.annotations.FIND;
+import com.winning.unifystorage_core.annotations.Model;
+import com.winning.unifystorage_core.annotations.Param;
 import com.winning.unifystorage_core.annotations.SAVE;
 import com.winning.unifystorage_core.annotations.SAVEORUPDATE;
 import com.winning.unifystorage_core.model.DbResult;
@@ -19,32 +21,32 @@ public interface ApiDataBase {
 
     @DB(table = User.class)
     @SAVE
-    DbResult saveUser(@FIELD User user);
+    DbResult saveUser(@Model User user);
 
     @DB(table = User.class)
     @SAVE
-    DbResult saveUsersByList(@FIELD List<User> user);
+    DbResult saveUsersByList(@Model List<User> user);
 
     @DB(table = User.class)
     @SAVE
-    DbResult saveUsersByArray(@FIELD User[] user);
+    DbResult saveUsersByArray(@Model User[] user);
 
     @DB(table = User.class)
     @SAVE
-    DbResult saveFake(@FIELD Fake fake);
+    DbResult saveFake(@Model Fake fake);
 
 
     @DB(table = User.class)
     @SAVEORUPDATE
-    DbResult saveOrUpdateUser(@FIELD User user);
+    DbResult saveOrUpdateUser(@Model User user);
 
     @DB(table = User.class)
     @SAVEORUPDATE
-    DbResult saveOrUpdateUsersByList(@FIELD List<User> user);
+    DbResult saveOrUpdateUsersByList(@Model List<User> user);
 
     @DB(table = User.class)
     @SAVEORUPDATE
-    DbResult saveOrUpdateUsersByArray(@FIELD User[] user);
+    DbResult saveOrUpdateUsersByArray(@Model User[] user);
 
     @DB(table = User.class)
     @FIND(where = "name = ? and age > ?",limit = 10,orderBy = "age")
@@ -53,4 +55,20 @@ public interface ApiDataBase {
     @DB(table = User.class)
     @FIND(where = "name in ?",limit = 10)
     DbResult findUsers(List<String> users);
+
+    @DB(table = User.class)
+    @DELETE(where = "name in ?",limit = 10)
+    DbResult deleteUsersByQuery(@Param List<String> users);
+
+    @DB(table = User.class)
+    @DELETE
+    DbResult deleteUsersByObject(@Model User user);
+
+    @DB(table = User.class)
+    @DELETE
+    DbResult deleteUsersByArray(@Model User[] user);
+
+    @DB(table = User.class)
+    @DELETE
+    DbResult deleteUsersByList(@Model List<User> user);
 }

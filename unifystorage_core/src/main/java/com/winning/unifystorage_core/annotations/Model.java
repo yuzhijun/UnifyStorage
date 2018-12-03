@@ -5,15 +5,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.PARAMETER;
 
 @Documented
-@Target(METHOD)
+@Target(PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface DELETE {
-    String orderBy() default "";
-    String where() default "";
-    String distinct() default "";
-    int limit() default 0;
-    boolean eager() default true;
+public @interface Model {
 }

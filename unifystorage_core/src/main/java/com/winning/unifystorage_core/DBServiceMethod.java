@@ -1,5 +1,6 @@
 package com.winning.unifystorage_core;
 
+import com.winning.unifystorage_core.Handler.DeleteHandler;
 import com.winning.unifystorage_core.Handler.FindHandler;
 import com.winning.unifystorage_core.Handler.SaveHandler;
 import com.winning.unifystorage_core.Handler.SaveOrUpdateHandler;
@@ -19,7 +20,7 @@ public class DBServiceMethod<ReturnT> extends ServiceMethod<ReturnT> {
     private final Annotation[][] parameterAnnotationsArray;
     private final Type[] parameterTypes;
 
-    private static HandlerAdapter storageHandler;
+    private HandlerAdapter storageHandler;
     private Class<? extends RealmObject> table;
 
     private DBServiceMethod(Method method, Class<? extends RealmObject> table){
@@ -42,23 +43,23 @@ public class DBServiceMethod<ReturnT> extends ServiceMethod<ReturnT> {
 
     private void parseHandler(Annotation annotation, Annotation[] annotations) {
         if (annotation instanceof FIND){
-            storageHandler = FindHandler.parseAnnotations(annotations, this.table);
+            this.storageHandler = FindHandler.parseAnnotations(annotations, this.table);
         }else if(annotation instanceof SAVE){
-            storageHandler = SaveHandler.parseAnnotations(annotations);
+            this.storageHandler = SaveHandler.parseAnnotations(annotations);
         }else if(annotation instanceof SAVEORUPDATE){
-            storageHandler = SaveOrUpdateHandler.parseAnnotations(annotations);
+            this.storageHandler = SaveOrUpdateHandler.parseAnnotations(annotations);
         }else if(annotation instanceof UPDATE){
             //TODO
         }else if(annotation instanceof DELETE){
-            //TODO
+            this.storageHandler = DeleteHandler.parseAnnotations(annotations, this.table);
         }
     }
 
     @Override
     ReturnT invoke(Object[] args) {
-        if (null == storageHandler){
+        if (null ==  this.storageHandler){
             throw new IllegalArgumentException("annotation is not exits! please check your code");
         }
-        return storageHandler.invoke(args, parameterTypes, parameterAnnotationsArray);
+        return  this.storageHandler.invoke(args, parameterTypes, parameterAnnotationsArray);
     }
 }

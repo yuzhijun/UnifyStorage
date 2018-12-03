@@ -3,7 +3,7 @@ package com.winning.unifystorage_core.Handler;
 import com.winning.unifystorage_core.HandlerAdapter;
 import com.winning.unifystorage_core.UStorage;
 import com.winning.unifystorage_core.Utils.CommonUtil;
-import com.winning.unifystorage_core.annotations.FIELD;
+import com.winning.unifystorage_core.annotations.Model;
 import com.winning.unifystorage_core.exception.ErrorParamsException;
 import com.winning.unifystorage_core.model.DbResult;
 
@@ -43,7 +43,7 @@ public class SaveOrUpdateHandler extends HandlerAdapter {
                         List<RealmObject> realmObjects = realm.copyToRealmOrUpdate((List<RealmObject>) args[0]);
                         result.setCount(realmObjects.size());
                     }else {
-                        throw new ErrorParamsException("save method parameter is invalid,please check your code");
+                        throw new ErrorParamsException("save or update method parameter is invalid,please check your code");
                     }
                 }
             }, new Realm.Transaction.OnSuccess() {
@@ -72,9 +72,9 @@ public class SaveOrUpdateHandler extends HandlerAdapter {
         if (args.length == 1
                 &&parameterAnnotationsArray.length == 1
                 && parameterAnnotationsArray[0].length == 1
-                && parameterAnnotationsArray[0][0].annotationType() == FIELD.class){
+                && parameterAnnotationsArray[0][0].annotationType() == Model.class){
             return true;
         }
-        throw new ErrorParamsException("save method parameter is invalid,please check your code");
+        throw new ErrorParamsException("save or update method parameter is invalid,please check your code");
     }
 }

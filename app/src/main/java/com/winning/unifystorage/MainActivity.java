@@ -16,6 +16,7 @@ import io.realm.RealmResults;
 public class MainActivity extends AppCompatActivity {
     private Button btnInsert;
     private Button btnFind;
+    private Button btnDelete;
     private ApiDataBase mApiDataBase;
 
     @Override
@@ -25,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
         btnInsert = findViewById(R.id.btnInsert);
         btnFind = findViewById(R.id.btnFind);
+        btnDelete = findViewById(R.id.btnDelete);
 
         mApiDataBase = ApiServiceModule.getInstance().provideApiService(ApiDataBase.class);
 
@@ -32,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         btnInsert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                saveOrUpdateUsersByArray();
+                saveUserByObject();
             }
         });
         btnFind.setOnClickListener(new View.OnClickListener() {
@@ -57,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
                 mApiDataBase.findUsers(users).registerDbFindCallBack(new DbResult.DbFindCallBack() {
                     @Override
                     public void onFirstFindResult(RealmResults realmResults) {
-                        realmResults.size();
+
                     }
 
                     @Override
@@ -65,6 +67,13 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                 });
+            }
+        });
+
+        btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteUserByObject();
             }
         });
     }
@@ -224,4 +233,24 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void deleteUserByObject(){
+        User user = new User();
+        user.setId("ef00ac44-4dcb-49a6-816a-fd4b8afb7f9c");
+        user.setAge("20");
+        user.setName("sharkchao");
+        user.setSex("男");
+        mApiDataBase.deleteUsersByObject(user).registerCallback(new DbResult.DbResultCallback() {
+            @Override
+            public void onSuccess(int count) {
+                Toast.makeText(MainActivity.this, "成功!"+count, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(Throwable error) {
+                Toast.makeText(MainActivity.this, "失败"+error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 }
