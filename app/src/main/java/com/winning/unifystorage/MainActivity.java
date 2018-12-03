@@ -15,7 +15,6 @@ import io.realm.RealmResults;
 
 public class MainActivity extends AppCompatActivity {
     private Button btnInsert;
-    private Button btnFind;
     private Button btnDelete;
     private Button btnFindAll;
     private Button btnFindUser;
@@ -37,7 +36,6 @@ public class MainActivity extends AppCompatActivity {
         btnFindUserByContains = findViewById(R.id.btnFindUserByContains);
         btnFindUserByLike = findViewById(R.id.btnFindUserByLike);
         btnFindUserByNotNull = findViewById(R.id.btnFindUserByNotNull);
-        btnFind = findViewById(R.id.btnFind);
         btnDelete = findViewById(R.id.btnDelete);
 
         mApiDataBase = ApiServiceModule.getInstance().provideApiService(ApiDataBase.class);
