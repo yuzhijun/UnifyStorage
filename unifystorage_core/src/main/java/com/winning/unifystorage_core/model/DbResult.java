@@ -9,7 +9,8 @@ import io.realm.RealmResults;
  * 827623353@qq.com
  * https://github.com/sharkchao
  */
-public class DbResult {
+public class DbResult<T>{
+    private T result;
     private int count;
     private DbResultCallback mResultCallback;
     private DbFindCallBack mDbFindCallBack;
@@ -25,8 +26,8 @@ public class DbResult {
         this.count = count;
     }
 
-    public interface DbResultCallback{
-        void onSuccess(int count);
+    public interface DbResultCallback<T>{
+        void onSuccess(int count,T result);
         void onError(Throwable error);
     }
 
@@ -61,7 +62,7 @@ public class DbResult {
         if (mResultCallback != null){
             hasObserver = true;
             if (isSuccess){
-                mResultCallback.onSuccess(count);
+                mResultCallback.onSuccess(count,result);
             }else if (throwable != null){
                 mResultCallback.onError(throwable);
             }
@@ -70,4 +71,11 @@ public class DbResult {
         }
     }
 
+    public T getResult() {
+        return result;
+    }
+
+    public void setResult(T result) {
+        this.result = result;
+    }
 }

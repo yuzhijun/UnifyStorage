@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import com.winning.unifystorage_core.HandlerAdapter;
 import com.winning.unifystorage_core.UStorage;
 import com.winning.unifystorage_core.Utils.CommonUtil;
+import com.winning.unifystorage_core.Utils.FindConditionUtil;
 import com.winning.unifystorage_core.annotations.FIND;
 import com.winning.unifystorage_core.annotations.Model;
 import com.winning.unifystorage_core.annotations.Param;
@@ -15,13 +16,10 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import javax.annotation.Nonnull;
-
+import io.realm.OrderedCollectionChangeSet;
+import io.realm.OrderedRealmCollectionChangeListener;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmObject;
@@ -73,7 +71,7 @@ public class DeleteHandler extends HandlerAdapter {
             }
         }
     }
-    public static HandlerAdapter parseAnnotations(Annotation[] annotations, Class<? extends RealmObject> table){
+    public static HandlerAdapter parseAnnotations(Annotation[] annotations, final Class<? extends RealmObject> table){
         return new DeleteHandler(annotations,table);
     }
 
@@ -128,35 +126,44 @@ public class DeleteHandler extends HandlerAdapter {
         return dbResult;
     }
 
-    private void deleteByQuery(Object[] args,Type[] parameterTypes){
-
-        try{
+    private void deleteByQuery(Object[] args,Type[] parameterTypes) {
+        try {
             RealmQuery<? extends RealmObject> query = UStorage.realm.where(this.table);
-            RealmQuery<? extends RealmObject> whereFilteredQuery = whereFilter(query, args , parameterTypes);
+            RealmQuery<? extends RealmObject> whereFilteredQuery = FindConditionUtil.whereFilter(where, query, args, parameterTypes);
 
-            if (!CommonUtil.isEmptyStr(orderBy)){
-                whereFilteredQuery.sort(orderBy);
-            }
-
-            if (0 != limit){
-                whereFilteredQuery.limit(limit);
-            }
-
-            if (!CommonUtil.isEmptyStr(distinct)){
-                whereFilteredQuery.distinct(distinct);
-            }
-
-            RealmResults result = whereFilteredQuery.findAllAsync();
-            boolean success = result.deleteAllFromRealm();
-
-            dbResult.setCount(result.size());
-            dbResult.setResultCallback(success,null);
-        }catch (Exception e){
+            RealmQuery<? extends RealmObject> otherFilteredQuery = FindConditionUtil.otherFilter(whereFilteredQuery, orderBy, limit, distinct);
+            RealmResults result = otherFilteredQuery.findAllAsync();
+            result.addChangeListener(new OrderedRealmCollectionChangeListener<RealmResults>() {
+                @Override
+                public void onChange(RealmResults realmResults, OrderedCollectionChangeSet changeSet) {
+                    if (realmResults != null && changeSet == null) {
+                        deleteByQueryTransaction(realmResults);
+                    }
+                }
+            });
+        } catch (Exception e) {
             e.printStackTrace();
-            dbResult.setResultCallback(false,e.getCause());
+            dbResult.setResultCallback(false, e.getCause());
         }
     }
 
+    private void deleteByQueryTransaction(final RealmResults realmResults){
+        UStorage.realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(@NonNull Realm realm) {
+                if (realmResults.size() > 0){
+                    boolean success = realmResults.deleteAllFromRealm();
+                    dbResult.setCount(realmResults.size());
+                    dbResult.setResultCallback(success,null);
+                }else {
+                    dbResult.setCount(0);
+                    dbResult.setResultCallback(false,new Throwable("No data was selected"));
+                }
+
+            }
+        });
+
+    }
     /**
      * 验证通过实体来删除表数据 参数是否合法
      * @param args
@@ -170,7 +177,7 @@ public class DeleteHandler extends HandlerAdapter {
                 && parameterAnnotationsArray[0][0].annotationType() == Model.class){
             return true;
         }
-        throw new ErrorParamsException("save method parameter is invalid,please check your code");
+       return false;
     }
     /**
      * 验证通过条件来删除表数据  参数是否合法
@@ -188,99 +195,6 @@ public class DeleteHandler extends HandlerAdapter {
         return true;
     }
 
-    private RealmQuery<? extends RealmObject> whereFilter(RealmQuery<? extends RealmObject> query,Object[] args, Type[] parameterTypes){
-        linkCondition.clear();
-        if (!CommonUtil.isEmptyStr(where)){
 
-            Pattern linkPattern = Pattern.compile(AND_OR);
-            Matcher linkMatcher = linkPattern.matcher(where);
-
-            while (linkMatcher.find()){
-                linkCondition.add(linkMatcher.group());
-            }
-
-            //说明有复合条件
-            if (linkCondition.size() > 0){
-                String[] whereArray = where.split(AND_OR);
-                if (args.length != whereArray.length || parameterTypes.length != whereArray.length){
-                    throw new IllegalArgumentException("parameter size is not equal to ?");
-                }
-
-                for (int i = 0;i < whereArray.length;i ++){
-                    String whereCondition = whereArray[i];
-                    Object parameter = args[i];
-                    Type parameterType = parameterTypes[i];
-                    //构造查询条件
-                    buildWhereCondition(query, whereCondition, parameter, parameterType);
-
-                    if (linkCondition.size() - 1 >= i){
-                        String condition = linkCondition.get(i);
-                        if ("and".equalsIgnoreCase(condition)){
-                            query.and();
-                        }else {
-                            query.or();
-                        }
-                    }
-                }
-            }else {//说明是单一条件
-                buildWhereCondition(query, where, args[0], parameterTypes[0]);
-            }
-        }
-
-        return query;
-    }
-
-    private void buildWhereCondition(@Nonnull RealmQuery<? extends RealmObject> query, @Nonnull String whereCondition,
-                                     @Nonnull Object parameter, @Nonnull Type parameterType) {
-        Class<?> rawType = CommonUtil.getRawType(parameterType);
-        for (int j = 0; j < patternArray.length; j ++){
-            Pattern pattern = Pattern.compile(patternArray[j][0]);
-            Matcher matcher = pattern.matcher(whereCondition);
-            if (matcher.matches()){
-                String[] array = whereCondition.split(patternArray[j][1]);
-                if (parameterType == String.class){
-                    if ("=".equalsIgnoreCase(patternArray[j][1])){
-                        query.equalTo(array[0].trim(),(String) parameter);
-                    }else if ("contains".equalsIgnoreCase(patternArray[j][1])){
-                        query.contains(array[0].trim(),(String) parameter);
-                    }else if("like".equalsIgnoreCase(patternArray[j][1])){
-                        query.like(array[0].trim(),(String) parameter);
-                    }else if ("notnull".equalsIgnoreCase(patternArray[j][1])){
-                        query.isNotNull(array[0].trim());
-                    }else if ("null".equalsIgnoreCase(patternArray[j][1])){
-                        query.isNull(array[0].trim());
-                    }
-                }else if(parameterType == Integer.class){
-                    if ("=".equalsIgnoreCase(patternArray[j][1])){
-                        query.equalTo(array[0].trim(),(int)parameter);
-                    }else if (">".equalsIgnoreCase(patternArray[j][1])){
-                        query.greaterThan(array[0].trim(),(int) parameter);
-                    }else if ("<".equalsIgnoreCase(patternArray[j][1])){
-                        query.lessThan(array[0].trim(),(int) parameter);
-                    }else if (">=".equalsIgnoreCase(patternArray[j][1])){
-                        query.greaterThanOrEqualTo(array[0].trim(),(int) parameter);
-                    }else if ("<=".equalsIgnoreCase(patternArray[j][1])){
-                        query.lessThanOrEqualTo(array[0].trim(),(int) parameter);
-                    }
-                }else if (parameterType == Date.class){
-                    if ("=".equalsIgnoreCase(patternArray[j][1])){
-                        query.equalTo(array[0].trim(),(Date) parameter);
-                    }else if (">".equalsIgnoreCase(patternArray[j][1])){
-                        query.greaterThan(array[0].trim(),(Date) parameter);
-                    }else if ("<".equalsIgnoreCase(patternArray[j][1])){
-                        query.lessThan(array[0].trim(),(Date) parameter);
-                    }else if (">=".equalsIgnoreCase(patternArray[j][1])){
-                        query.greaterThanOrEqualTo(array[0].trim(),(Date) parameter);
-                    }else if ("<=".equalsIgnoreCase(patternArray[j][1])){
-                        query.lessThanOrEqualTo(array[0].trim(),(Date) parameter);
-                    }
-                }else if (List.class.isAssignableFrom(rawType)){
-                    if ("in".equalsIgnoreCase(patternArray[j][1])){
-                        query.in(array[0].trim(), (String[]) ((List)parameter).toArray(new String[0]));
-                    }
-                }
-            }
-        }
-    }
 
 }

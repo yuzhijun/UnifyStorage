@@ -1,4 +1,4 @@
-package com.winning.unifystorage;
+package com.winning.unifystorage.model;
 
 /**
  * 2018/11/30

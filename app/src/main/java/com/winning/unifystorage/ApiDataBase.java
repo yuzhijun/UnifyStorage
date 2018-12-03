@@ -1,10 +1,11 @@
 package com.winning.unifystorage;
 
+import com.winning.unifystorage.model.Fake;
+import com.winning.unifystorage.model.User;
 import com.winning.unifystorage_core.annotations.DB;
 import com.winning.unifystorage_core.annotations.DELETE;
 import com.winning.unifystorage_core.annotations.FIND;
 import com.winning.unifystorage_core.annotations.Model;
-import com.winning.unifystorage_core.annotations.Param;
 import com.winning.unifystorage_core.annotations.SAVE;
 import com.winning.unifystorage_core.annotations.SAVEORUPDATE;
 import com.winning.unifystorage_core.model.DbResult;
@@ -61,8 +62,8 @@ public interface ApiDataBase {
     DbResult findUsers(List<String> users);
 
     @DB(table = User.class)
-    @DELETE(where = "name in ?",limit = 10)
-    DbResult deleteUsersByQuery(@Param List<String> users);
+    @DELETE
+    DbResult deleteUsersByQuery();
 
     @DB(table = User.class)
     @DELETE
@@ -75,6 +76,9 @@ public interface ApiDataBase {
     @DB(table = User.class)
     @DELETE
     DbResult deleteUsersByList(@Model List<User> user);
+
+    @DB(table = User.class)
+    @FIND(where = "name in ?")
     DbResult findUserByIn(List<String> users);
 
     @DB(table = User.class)

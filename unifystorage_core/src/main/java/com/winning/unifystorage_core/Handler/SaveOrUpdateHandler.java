@@ -18,11 +18,12 @@ import io.realm.RealmObject;
 public class SaveOrUpdateHandler extends HandlerAdapter {
 
     private DbResult result;
-    private SaveOrUpdateHandler(Annotation[] annotations){
+    private SaveOrUpdateHandler(){
+
     }
 
-    public static HandlerAdapter parseAnnotations(Annotation[] annotations){
-        return new SaveOrUpdateHandler(annotations);
+    public static HandlerAdapter parseAnnotations(){
+        return new SaveOrUpdateHandler();
     }
 
     @Override
@@ -35,12 +36,15 @@ public class SaveOrUpdateHandler extends HandlerAdapter {
                     Class<?> rawType = CommonUtil.getRawType(parameterTypes[0]);
                     if (RealmObject[].class.isAssignableFrom(rawType) && rawType.isArray()){
                         List<RealmObject> realmObjects = realm.copyToRealmOrUpdate(Arrays.asList((RealmObject[]) args[0]));
+                        result.setResult(realmObjects);
                         result.setCount(realmObjects.size());
                     } else if (RealmObject.class.isAssignableFrom(rawType)){
-                        realm.copyToRealmOrUpdate(((RealmObject) args[0]));
+                        RealmObject realmObject = realm.copyToRealmOrUpdate(((RealmObject) args[0]));
+                        result.setResult(realmObject);
                         result.setCount(1);
                     } else if (List.class.isAssignableFrom(rawType)){
                         List<RealmObject> realmObjects = realm.copyToRealmOrUpdate((List<RealmObject>) args[0]);
+                        result.setResult(realmObjects);
                         result.setCount(realmObjects.size());
                     }else {
                         throw new ErrorParamsException("save or update method parameter is invalid,please check your code");
