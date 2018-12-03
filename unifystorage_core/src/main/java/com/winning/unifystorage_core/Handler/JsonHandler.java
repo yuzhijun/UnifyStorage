@@ -1,16 +1,18 @@
 package com.winning.unifystorage_core.Handler;
 
-import com.alibaba.fastjson.JSONObject;
+import com.google.gson.Gson;
 import com.winning.unifystorage_core.HandlerAdapter;
 import com.winning.unifystorage_core.UStorage;
 import com.winning.unifystorage_core.Utils.CommonUtil;
 import com.winning.unifystorage_core.exception.ErrorParamsException;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.List;
 
 public class JsonHandler extends HandlerAdapter {
+    private Gson mGson = new Gson();
     private String key;
     private Class<?> convert;
 
@@ -41,11 +43,11 @@ public class JsonHandler extends HandlerAdapter {
                 UStorage.kv.encode(this.key, (boolean) arg);
             }else if(parameterType == String.class){
                 UStorage.kv.encode(this.key, (String) arg);
-            }else if(Object.class.isAssignableFrom(rawType)){
-                String json = JSONObject.toJSONString(arg);
+            }else if(!(parameterType instanceof ParameterizedType) &&  Object.class.isAssignableFrom(rawType)){
+                String json = mGson.toJson(arg, parameterType);
                 UStorage.kv.encode(this.key, json);
             }else if(List.class.isAssignableFrom(rawType)){
-                String json = JSONObject.toJSONString(arg);
+                String json = mGson.toJson(arg, parameterType);
                 UStorage.kv.encode(this.key, json);
             }
             return true;

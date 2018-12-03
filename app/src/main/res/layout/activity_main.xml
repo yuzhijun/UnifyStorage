@@ -145,6 +145,55 @@
         android:layout_marginTop="5dp"
         app:layout_constraintTop_toBottomOf="@id/btnFindUserByLike"
         />
+
+    <Button
+        android:id="@+id/btnSaveJson"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:text="saveJson"
+        app:layout_constraintLeft_toRightOf="@id/saveUserByObject"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/btnFindUserByNotNull"
+        />
+
+    <Button
+        android:id="@+id/btnGetJson"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:text="getJson"
+        app:layout_constraintLeft_toRightOf="@id/saveUserByObject"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="5dp"
+        app:layout_constraintTop_toBottomOf="@id/btnSaveJson"
+        />
+
+    <Button
+        android:id="@+id/btnSaveJsonArray"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:text="saveJsonArray"
+        app:layout_constraintLeft_toRightOf="@id/saveUserByObject"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="5dp"
+        app:layout_constraintTop_toBottomOf="@id/btnGetJson"
+        />
+
+    <Button
+        android:id="@+id/btnGetJsonArray"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:text="getJsonArray"
+        app:layout_constraintLeft_toRightOf="@id/saveUserByObject"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="5dp"
+        app:layout_constraintTop_toBottomOf="@id/btnSaveJsonArray"
+        />
+
     <Button
         android:id="@+id/deleteUsersByObject"
         android:layout_width="wrap_content"

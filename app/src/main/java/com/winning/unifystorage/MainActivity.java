@@ -34,6 +34,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button btnFindUserByContains;
     private Button btnFindUserByLike;
     private Button btnFindUserByNotNull;
+    private Button btnSaveJson;
+    private Button btnGetJson;
+    private Button btnSaveJsonArray;
+    private Button btnGetJsonArray;
     private ApiDataBase mApiDataBase;
 
     @Override
@@ -60,7 +64,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         deleteUsersByList = findViewById(R.id.deleteUsersByList);
         deleteUsersByQuery = findViewById(R.id.deleteUsersByQuery);
 
-
+        btnSaveJson = findViewById(R.id.btnSaveJson);
+        btnGetJson = findViewById(R.id.btnGetJson);
+        btnSaveJsonArray = findViewById(R.id.btnSaveJsonArray);
+        btnGetJsonArray = findViewById(R.id.btnGetJsonArray);
 
         saveUserByObject.setOnClickListener(this);
         saveUsersByArray.setOnClickListener(this);
@@ -72,6 +79,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         deleteUsersByArray.setOnClickListener(this);
         deleteUsersByList.setOnClickListener(this);
         deleteUsersByQuery.setOnClickListener(this);
+        btnSaveJson.setOnClickListener(this);
+        btnGetJson.setOnClickListener(this);
+        btnSaveJsonArray.setOnClickListener(this);
+        btnGetJsonArray.setOnClickListener(this);
 
         mApiDataBase = ApiServiceModule.getInstance().provideApiService(ApiDataBase.class);
 
@@ -391,6 +402,43 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
+    private void saveJson(){
+        User user = new User();
+        user.setName("yuzhijun");
+        user.setAge("18");
+        user.setSex("男");
+
+        boolean result =  mApiDataBase.saveJson(user);
+    }
+
+    private void getJson(){
+        DbResult<User> user = mApiDataBase.getJson();
+        if (null != user && null != user.getResult()){
+            System.out.println(user.getResult().getName());
+        }
+
+    }
+
+    private void saveJsonArray(){
+        List<User> users = new ArrayList<>();
+        User user = new User();
+        user.setName("yuzhijun");
+        user.setAge("18");
+        user.setSex("男");
+
+        users.add(user);
+
+        boolean result =  mApiDataBase.saveJsonArray(users);
+    }
+
+    private void getJsonArray(){
+        DbResult<List<User>> users = mApiDataBase.getJsonArray();
+        if (null != users && null != users.getResult()){
+            System.out.println(users.getResult().get(0).getName());
+        }
+
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()){
@@ -423,6 +471,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.deleteUsersByQuery:
                 deleteUsersByQuery();
+                break;
+            case R.id.btnSaveJson:
+                saveJson();
+                break;
+            case R.id.btnGetJson:
+                getJson();
+                break;
+            case R.id.btnSaveJsonArray:
+                saveJsonArray();
+                break;
+            case R.id.btnGetJsonArray:
+                getJsonArray();
                 break;
         }
     }
