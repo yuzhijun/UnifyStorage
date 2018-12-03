@@ -195,7 +195,7 @@ public class FindHandler extends HandlerAdapter {
                     }
                 }else if (List.class.isAssignableFrom(rawType)){
                     if ("in".equalsIgnoreCase(patternArray[j][1])){
-                        query.in(array[0].trim(), (String[]) ((List)parameter).toArray());
+                        query.in(array[0].trim(), (String[]) ((List)parameter).toArray(new String[0]));
                     }
                 }
             }
