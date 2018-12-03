@@ -55,7 +55,7 @@ public class DbResult {
         setResultCallback(isSuccess,mThrowable);
     }
 
-    public void setResultCallback(boolean success,Throwable throwable){
+     void setResultCallback(boolean success,Throwable throwable){
         isSuccess = success;
         mThrowable = throwable;
         if (mResultCallback != null){

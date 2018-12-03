@@ -18,14 +18,14 @@ import io.realm.Realm;
 import io.realm.RealmModel;
 import io.realm.RealmObject;
 
-public class SaveHandler extends HandlerAdapter {
+public class DeleteHandler extends HandlerAdapter {
 
     private DbResult result;
-    private SaveHandler(Annotation[] annotations){
+    private DeleteHandler(Annotation[] annotations){
     }
 
     public static HandlerAdapter parseAnnotations(Annotation[] annotations){
-        return new SaveHandler(annotations);
+        return new DeleteHandler(annotations);
     }
 
     @Override
@@ -40,6 +40,7 @@ public class SaveHandler extends HandlerAdapter {
                     if (RealmObject[].class.isAssignableFrom(rawType) && rawType.isArray()){
                         List<RealmObject> realmObjects = realm.copyToRealm(Arrays.asList((RealmObject[]) args[0]));
                         result.setCount(realmObjects.size());
+                        realm.d
                     } else if (RealmObject.class.isAssignableFrom(rawType)){
                         realm.copyToRealm((RealmModel) args[0]);
                         result.setCount(1);

@@ -42,6 +42,8 @@ public class SaveOrUpdateHandler extends HandlerAdapter {
                     } else if (List.class.isAssignableFrom(rawType)){
                         List<RealmObject> realmObjects = realm.copyToRealmOrUpdate((List<RealmObject>) args[0]);
                         result.setCount(realmObjects.size());
+                    }else {
+                        throw new ErrorParamsException("save method parameter is invalid,please check your code");
                     }
                 }
             }, new Realm.Transaction.OnSuccess() {
@@ -73,6 +75,6 @@ public class SaveOrUpdateHandler extends HandlerAdapter {
                 && parameterAnnotationsArray[0][0].annotationType() == FIELD.class){
             return true;
         }
-        throw new ErrorParamsException("save method parameter is invalid");
+        throw new ErrorParamsException("save method parameter is invalid,please check your code");
     }
 }

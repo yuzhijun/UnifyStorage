@@ -65,6 +65,9 @@ public final class UStorage {
             result = serviceMethodCache.get(method);
             if (result == null) {
                 result = ServiceMethod.parseAnnotations(this, method);
+                if (result == null){
+                    throw new IllegalArgumentException("annotation is not exits! please check your code");
+                }
                 serviceMethodCache.put(method, result);
             }
         }
