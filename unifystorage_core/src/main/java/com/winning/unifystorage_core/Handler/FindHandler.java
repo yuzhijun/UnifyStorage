@@ -48,7 +48,7 @@ public class FindHandler extends HandlerAdapter {
         }
     }
 
-    public static HandlerAdapter parseAnnotations(Annotation[] annotations, Class<? extends RealmObject> table){
+    public static HandlerAdapter parseAnnotations(Annotation[] annotations,final Class<? extends RealmObject> table){
         return new FindHandler(annotations, table);
     }
 

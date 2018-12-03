@@ -9,13 +9,22 @@ import io.realm.RealmResults;
  * 827623353@qq.com
  * https://github.com/sharkchao
  */
-public class DbResult {
+public class DbResult<T> {
+    private T result;
     private int count;
     private DbResultCallback mResultCallback;
     private DbFindCallBack mDbFindCallBack;
     private boolean isSuccess;
     private Throwable mThrowable;
     private boolean hasObserver;
+
+    public DbResult(){
+
+    }
+
+    public DbResult(T result){
+        this.result = result;
+    }
 
     public int getCount() {
         return count;

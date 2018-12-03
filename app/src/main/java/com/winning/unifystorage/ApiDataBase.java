@@ -3,6 +3,8 @@ package com.winning.unifystorage;
 import com.winning.unifystorage_core.annotations.DB;
 import com.winning.unifystorage_core.annotations.DELETE;
 import com.winning.unifystorage_core.annotations.FIND;
+import com.winning.unifystorage_core.annotations.GETJSON;
+import com.winning.unifystorage_core.annotations.JSON;
 import com.winning.unifystorage_core.annotations.Model;
 import com.winning.unifystorage_core.annotations.Param;
 import com.winning.unifystorage_core.annotations.SAVE;
@@ -88,4 +90,34 @@ public interface ApiDataBase {
     @DB(table = User.class)
     @FIND(where = "? notnull",limit = 2)
     DbResult findUserByNotNull(String name);
+
+    @JSON(key = "JSON_KEY",convert = User.class)
+    boolean saveJson(User user);
+
+    @JSON(key = "JSON_ARRAY",convert = User.class)
+    boolean saveJsonArray(List<User> users);
+
+    @JSON(key = "JSON_STR")
+    boolean saveStr(String str);
+
+    @JSON(key = "JSON_INT")
+    boolean saveInt(int ints);
+
+    @JSON(key = "JSON_BOOL")
+    boolean saveBool(boolean booleans);
+
+    @GETJSON(key = "JSON_KEY",convert=User.class)
+    DbResult<User> getJson();
+
+    @GETJSON(key = "JSON_ARRAY",convert = User[].class)
+    DbResult<List<User>> getJsonArray();
+
+    @GETJSON(key = "JSON_STR")
+    DbResult<String> getStr();
+
+    @GETJSON(key="JSON_BOOL",convert = Boolean.class)
+    DbResult<Boolean> getBool();
+
+    @GETJSON(key = "JSON_INT",convert = Integer.class)
+    DbResult<Integer> getInt();
 }

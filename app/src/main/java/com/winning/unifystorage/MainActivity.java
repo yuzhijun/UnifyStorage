@@ -58,8 +58,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }));
 
-        btnFindUser.setOnClickListener(view -> mApiDataBase.findUser("sharkchao", 10)
-        .registerDbFindCallBack(new DbResult.DbFindCallBack() {
+        btnFindUser.setOnClickListener(view -> mApiDataBase.findUser("sharkchao", 10).registerDbFindCallBack(new DbResult.DbFindCallBack() {
             @Override
             public void onFirstFindResult(RealmResults realmResults) {
                 realmResults.size();
