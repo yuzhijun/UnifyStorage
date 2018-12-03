@@ -40,7 +40,6 @@ public class DeleteHandler extends HandlerAdapter {
                     if (RealmObject[].class.isAssignableFrom(rawType) && rawType.isArray()){
                         List<RealmObject> realmObjects = realm.copyToRealm(Arrays.asList((RealmObject[]) args[0]));
                         result.setCount(realmObjects.size());
-                        realm.d
                     } else if (RealmObject.class.isAssignableFrom(rawType)){
                         realm.copyToRealm((RealmModel) args[0]);
                         result.setCount(1);
