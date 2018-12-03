@@ -10,6 +10,6 @@ import static java.lang.annotation.ElementType.METHOD;
 @Documented
 @Target(METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface INSERT {
+public @interface DELETE {
     String where() default "";
 }

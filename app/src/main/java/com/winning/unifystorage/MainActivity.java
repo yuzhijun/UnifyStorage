@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         btnInsert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-              saveOrUpdateObject();
+                saveOrUpdateUsersByArray();
             }
         });
         btnFind.setOnClickListener(new View.OnClickListener() {
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void saveUsersByObject(){
+    private void saveUserByObject(){
         User user = new User();
         user.setAge("20");
         user.setName("sharkchao");
@@ -136,8 +136,9 @@ public class MainActivity extends AppCompatActivity {
     }
     private void saveOrUpdateObject(){
         User user = new User();
+        user.setId("d07ea3e1-2f75-4363-91c3-697570c882e6");
         user.setAge("20");
-        user.setName("大熊");
+        user.setName("小熊");
         user.setSex("男");
         mApiDataBase.saveOrUpdateUser(user).registerCallback(new DbResult.DbResultCallback() {
             @Override
@@ -154,14 +155,16 @@ public class MainActivity extends AppCompatActivity {
         List<User>list = new ArrayList<>();
 
         User user1 = new User();
-        user1.setAge("20");
+        user1.setAge("22");
         user1.setName("小明");
         user1.setSex("男");
+        user1.setId("b1d92a7f-6201-4d5f-be37-4fb33283ce44");
 
         User user2 = new User();
-        user2.setAge("15");
+        user2.setAge("18");
         user2.setName("小红");
         user2.setSex("女");
+        user2.setId("79be8e66-e1d0-4386-96c8-9e71a20ecd42");
 
         list.add(user1);
         list.add(user2);
@@ -180,14 +183,17 @@ public class MainActivity extends AppCompatActivity {
         User[]users = new User[2];
 
         User user1 = new User();
-        user1.setAge("20");
+        user1.setAge("22");
         user1.setName("小绿");
         user1.setSex("男");
+        user1.setId("56ea25d8-ad50-4422-aa47-63c6e4901c3b");
+
 
         User user2 = new User();
-        user2.setAge("15");
+        user2.setAge("18");
         user2.setName("小白");
         user2.setSex("女");
+        user2.setId("6b6ea802-d499-4ba7-9ba5-62de4fc5abc8");
 
         users[0] = user1;
         users[1] = user2;
