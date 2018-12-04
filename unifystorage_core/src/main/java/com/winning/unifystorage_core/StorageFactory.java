@@ -1,6 +1,7 @@
 package com.winning.unifystorage_core;
 
 import com.winning.unifystorage_core.annotations.DB;
+import com.winning.unifystorage_core.annotations.GETJSON;
 import com.winning.unifystorage_core.annotations.JSON;
 
 import java.lang.annotation.Annotation;
@@ -49,7 +50,10 @@ final class StorageFactory {
                 this.serviceMethod = DBServiceMethod.parseAnnotations(this.storage, this.method, db.table());
             }else if (annotation instanceof JSON){
                 JSON json = (JSON) annotation;
-                this.serviceMethod = JSONServiceMethod.parseAnnotations(this.storage, this.method, json.key());
+                this.serviceMethod = JSONServiceMethod.parseAnnotations(this.storage, this.method, json.key(), json.convert());
+            }else if (annotation instanceof GETJSON){
+                GETJSON json = (GETJSON) annotation;
+                this.serviceMethod = JSONServiceMethod.parseAnnotations(this.storage, this.method, json.key(), json.convert());
             }
         }
     }

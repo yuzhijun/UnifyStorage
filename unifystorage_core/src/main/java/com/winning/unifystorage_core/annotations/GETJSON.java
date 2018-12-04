@@ -10,7 +10,7 @@ import static java.lang.annotation.ElementType.METHOD;
 @Documented
 @Target(METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface JSON {
+public @interface GETJSON {
     String key() default "";
-    Class<?> convert() default Object.class;
+    Class<?> convert() default String.class;
 }

@@ -5,6 +5,9 @@ import com.winning.unifystorage.model.User;
 import com.winning.unifystorage_core.annotations.DB;
 import com.winning.unifystorage_core.annotations.DELETE;
 import com.winning.unifystorage_core.annotations.FIND;
+import com.winning.unifystorage_core.annotations.GETJSON;
+import com.winning.unifystorage_core.annotations.JSON;
+import com.winning.unifystorage_core.annotations.Model;
 import com.winning.unifystorage_core.annotations.SAVE;
 import com.winning.unifystorage_core.annotations.SAVEORUPDATE;
 import com.winning.unifystorage_core.annotations.UPDATE;
@@ -85,4 +88,34 @@ public interface ApiDataBase {
     @UPDATE(where = "name = ?",set = "name = ? and age = ?")
     DbResult updateUsersByQuery(String oldName,String newName,String age);
 
+
+    @JSON(key = "JSON_KEY",convert = User.class)
+    boolean saveJson(User user);
+
+    @JSON(key = "JSON_ARRAY",convert = User.class)
+    boolean saveJsonArray(List<User> users);
+
+    @JSON(key = "JSON_STR")
+    boolean saveStr(String str);
+
+    @JSON(key = "JSON_INT")
+    boolean saveInt(int ints);
+
+    @JSON(key = "JSON_BOOL")
+    boolean saveBool(boolean booleans);
+
+    @GETJSON(key = "JSON_KEY",convert=User.class)
+    DbResult<User> getJson();
+
+    @GETJSON(key = "JSON_ARRAY",convert = User[].class)
+    DbResult<List<User>> getJsonArray();
+
+    @GETJSON(key = "JSON_STR")
+    DbResult<String> getStr();
+
+    @GETJSON(key="JSON_BOOL",convert = Boolean.class)
+    DbResult<Boolean> getBool();
+
+    @GETJSON(key = "JSON_INT",convert = Integer.class)
+    DbResult<Integer> getInt();
 }

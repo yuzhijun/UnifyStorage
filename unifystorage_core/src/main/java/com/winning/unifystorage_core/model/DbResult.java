@@ -18,6 +18,21 @@ public class DbResult<T>{
     private Throwable mThrowable;
     private boolean hasObserver;
 
+    public DbResult(){
+    }
+
+    public DbResult(T result){
+        this.result = result;
+    }
+
+    public T getResult() {
+        return result;
+    }
+
+    public void setResult(T result) {
+        this.result = result;
+    }
+
     public int getCount() {
         return count;
     }
@@ -70,13 +85,5 @@ public class DbResult<T>{
         }else {
             hasObserver = false;
         }
-    }
-
-    public T getResult() {
-        return result;
-    }
-
-    public void setResult(T result) {
-        this.result = result;
     }
 }
