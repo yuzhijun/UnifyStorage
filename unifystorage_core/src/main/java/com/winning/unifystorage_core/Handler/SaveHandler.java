@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import com.winning.unifystorage_core.HandlerAdapter;
 import com.winning.unifystorage_core.UStorage;
 import com.winning.unifystorage_core.Utils.CommonUtil;
-import com.winning.unifystorage_core.annotations.Model;
 import com.winning.unifystorage_core.exception.ErrorParamsException;
 import com.winning.unifystorage_core.model.DbResult;
 
@@ -31,7 +30,7 @@ public class SaveHandler extends HandlerAdapter {
     @Override
     public DbResult invoke(final Object[] args, final Type[] parameterTypes, Annotation[][] parameterAnnotationsArray) {
         result = new DbResult();
-        if (checkIfValid(args,parameterAnnotationsArray)){
+        if (checkIfValid(args)){
             UStorage.realm.executeTransactionAsync(new Realm.Transaction() {
                 @Override
                 public void execute(@NonNull Realm realm) {
@@ -70,14 +69,10 @@ public class SaveHandler extends HandlerAdapter {
     /**
      * 验证参数是否合法
      * @param args
-     * @param parameterAnnotationsArray
      * @return
      */
-    private boolean checkIfValid(Object[] args , Annotation[][] parameterAnnotationsArray){
-        if (args.length == 1
-                &&parameterAnnotationsArray.length == 1
-                && parameterAnnotationsArray[0].length == 1
-                && parameterAnnotationsArray[0][0].annotationType() == Model.class){
+    private boolean checkIfValid(Object[] args){
+        if (args.length == 1){
             return true;
         }
         throw new ErrorParamsException("save method parameter is invalid,please check your code");

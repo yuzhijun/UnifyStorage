@@ -4,6 +4,7 @@ import com.winning.unifystorage_core.Handler.DeleteHandler;
 import com.winning.unifystorage_core.Handler.FindHandler;
 import com.winning.unifystorage_core.Handler.SaveHandler;
 import com.winning.unifystorage_core.Handler.SaveOrUpdateHandler;
+import com.winning.unifystorage_core.Handler.UpdateHandler;
 import com.winning.unifystorage_core.annotations.FIND;
 import com.winning.unifystorage_core.annotations.DELETE;
 import com.winning.unifystorage_core.annotations.SAVE;
@@ -49,7 +50,7 @@ public class DBServiceMethod<ReturnT> extends ServiceMethod<ReturnT> {
         }else if(annotation instanceof SAVEORUPDATE){
             this.storageHandler = SaveOrUpdateHandler.parseAnnotations();
         }else if(annotation instanceof UPDATE){
-            //TODO
+            this.storageHandler = UpdateHandler.parseAnnotations(annotations, this.table);
         }else if(annotation instanceof DELETE){
             this.storageHandler = DeleteHandler.parseAnnotations(annotations, this.table);
         }

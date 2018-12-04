@@ -2,7 +2,6 @@
 <android.support.v4.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -146,36 +145,17 @@
         app:layout_constraintTop_toBottomOf="@id/btnFindUserByLike"
         />
     <Button
-        android:id="@+id/deleteUsersByObject"
+        android:id="@+id/deleteUsersByResult"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAllCaps="false"
-        android:text="deleteUsersByObject"
+        android:text="deleteUsersByResult"
         android:textSize="@dimen/font_smaller"
         android:textColor="@color/red"
         android:layout_marginTop="@dimen/spacing_20"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/saveOrUpdateUsersByArray"/>
-    <Button
-        android:id="@+id/deleteUsersByArray"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAllCaps="false"
-        android:text="deleteUsersByArray"
-        android:textSize="@dimen/font_smaller"
-        android:textColor="@color/red"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/deleteUsersByObject"/>
-    <Button
-        android:id="@+id/deleteUsersByList"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAllCaps="false"
-        android:text="deleteUsersByList"
-        android:textSize="@dimen/font_smaller"
-        android:textColor="@color/red"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/deleteUsersByArray"/>
+
     <Button
         android:id="@+id/deleteUsersByQuery"
         android:layout_width="wrap_content"
@@ -185,7 +165,28 @@
         android:textSize="@dimen/font_smaller"
         android:textColor="@color/red"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/deleteUsersByList"/>
+        app:layout_constraintTop_toBottomOf="@id/deleteUsersByResult"/>
+    <Button
+        android:id="@+id/updateUsersByResult"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:text="updateUsersByResult"
+        android:textSize="@dimen/font_smaller"
+        android:textColor="@color/orange"
+        android:layout_marginTop="@dimen/spacing_20"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/deleteUsersByQuery"/>
+    <Button
+        android:id="@+id/updateUsersByQuery"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:text="updateUsersByQuery"
+        android:textSize="@dimen/font_smaller"
+        android:textColor="@color/orange"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/updateUsersByResult"/>
 
-</android.support.constraint.ConstraintLayout>
+    </android.support.constraint.ConstraintLayout>
 </android.support.v4.widget.NestedScrollView>

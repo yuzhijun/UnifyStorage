@@ -11,5 +11,10 @@ import static java.lang.annotation.ElementType.METHOD;
 @Target(METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface UPDATE {
+    String orderBy() default "";
     String where() default "";
+    String set() default "";
+    String distinct() default "";
+    int limit() default 0;
+    boolean eager() default true;
 }

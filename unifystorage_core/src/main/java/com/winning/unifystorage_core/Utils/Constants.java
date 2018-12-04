@@ -12,6 +12,7 @@ public class Constants {
     public static final String NULL = "^[?](\\s)?null(\\s)?";
     public static final String IN = "\\w+(\\s)?in(\\s)?[?](\\s)?";
     public static final String AND_OR = "and|or";
+    public static final String AND = "and";
 
     public static final String[][] patternArray = {{EQUAL_TO, "="}, {GREATER_THAN, ">"}, {LESS_THAN, "<"}, {GREATER_THAN_OR_EQUAL_TO, ">="},
             {LESS_THAN_OR_EQUAL_TO, "<="}, {CONTAINS, "contains"}, {LIKE, "like"}, {ISNOTNULL, "notnull"}, {NULL, "null"}, {IN, "in"}};

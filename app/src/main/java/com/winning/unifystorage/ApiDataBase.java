@@ -5,14 +5,12 @@ import com.winning.unifystorage.model.User;
 import com.winning.unifystorage_core.annotations.DB;
 import com.winning.unifystorage_core.annotations.DELETE;
 import com.winning.unifystorage_core.annotations.FIND;
-import com.winning.unifystorage_core.annotations.Model;
 import com.winning.unifystorage_core.annotations.SAVE;
 import com.winning.unifystorage_core.annotations.SAVEORUPDATE;
+import com.winning.unifystorage_core.annotations.UPDATE;
 import com.winning.unifystorage_core.model.DbResult;
 
 import java.util.List;
-
-import io.realm.RealmResults;
 
 /**
  * 2018/11/29
@@ -24,32 +22,32 @@ public interface ApiDataBase {
 
     @DB(table = User.class)
     @SAVE
-    DbResult saveUser(@Model User user);
+    DbResult saveUser(User user);
 
     @DB(table = User.class)
     @SAVE
-    DbResult saveUsersByList(@Model List<User> user);
+    DbResult saveUsersByList(List<User> user);
 
     @DB(table = User.class)
     @SAVE
-    DbResult saveUsersByArray(@Model User[] user);
+    DbResult saveUsersByArray(User[] user);
 
     @DB(table = User.class)
     @SAVE
-    DbResult saveFake(@Model Fake fake);
+    DbResult saveFake(Fake fake);
 
 
     @DB(table = User.class)
     @SAVEORUPDATE
-    DbResult saveOrUpdateUser(@Model User user);
+    DbResult saveOrUpdateUser(User user);
 
     @DB(table = User.class)
     @SAVEORUPDATE
-    DbResult saveOrUpdateUsersByList(@Model List<User> user);
+    DbResult saveOrUpdateUsersByList(List<User> user);
 
     @DB(table = User.class)
     @SAVEORUPDATE
-    DbResult saveOrUpdateUsersByArray(@Model User[] user);
+    DbResult saveOrUpdateUsersByArray(User[] user);
 
     @DB(table = User.class)
     @FIND
@@ -57,31 +55,19 @@ public interface ApiDataBase {
 
     @DB(table = User.class)
     @FIND(where = "name = ? and age > ?",limit = 10,orderBy = "age")
-    DbResult findUser(String name, int age);
+    DbResult<User> findUser(String name, int age);
 
     @DB(table = User.class)
     @FIND(where = "name in ?",limit = 10)
     DbResult findUsers(List<String> users);
 
     @DB(table = User.class)
-    @DELETE
+    @DELETE(where = "name = ?")
     DbResult deleteUsersByQuery();
 
     @DB(table = User.class)
-    @DELETE
-    DbResult deleteUsersByObject(@Model RealmResults<User> user);
-
-//    @DB(table = User.class)
-//    @DELETE
-//    DbResult deleteUsersByArray(@Model User[] user);
-//
-//    @DB(table = User.class)
-//    @DELETE
-//    DbResult deleteUsersByList(@Model List<User> user);
-
-    @DB(table = User.class)
     @FIND(where = "name in ?")
-    DbResult findUserByIn(List<String> users);
+    DbResult<User> findUserByIn(List<String> users);
 
     @DB(table = User.class)
     @FIND(where = "name contains ?",distinct = "name")
@@ -94,4 +80,9 @@ public interface ApiDataBase {
     @DB(table = User.class)
     @FIND(where = "? notnull",limit = 2)
     DbResult findUserByNotNull(String name);
+
+    @DB(table = User.class)
+    @UPDATE(where = "name = ?",set = "name = ? and age = ?")
+    DbResult updateUsersByQuery(String oldName,String newName,String age);
+
 }

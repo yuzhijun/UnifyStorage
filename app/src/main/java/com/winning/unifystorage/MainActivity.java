@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.winning.unifystorage.data.UserData;
 import com.winning.unifystorage.model.Fake;
 import com.winning.unifystorage.model.User;
 import com.winning.unifystorage_core.model.DbResult;
@@ -14,6 +13,7 @@ import com.winning.unifystorage_core.model.DbResult;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.realm.Realm;
 import io.realm.RealmResults;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -23,10 +23,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button saveOrUpdateObject;
     private Button saveOrUpdateUsersByList;
     private Button saveOrUpdateUsersByArray;
-    private Button deleteUsersByObject;
-    private Button deleteUsersByArray;
-    private Button deleteUsersByList;
+    private Button deleteUsersByResult;
     private Button deleteUsersByQuery;
+    private Button updateUsersByResult;
+    private Button updateUsersByQuery;
     private Button btnFindAll;
     private Button btnFindUser;
     private Button btnFindUserByIn;
@@ -54,12 +54,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnFindUserByLike = findViewById(R.id.btnFindUserByLike);
         btnFindUserByNotNull = findViewById(R.id.btnFindUserByNotNull);
 
-        deleteUsersByObject = findViewById(R.id.deleteUsersByObject);
-        deleteUsersByArray = findViewById(R.id.deleteUsersByArray);
-        deleteUsersByList = findViewById(R.id.deleteUsersByList);
+        deleteUsersByResult = findViewById(R.id.deleteUsersByResult);
         deleteUsersByQuery = findViewById(R.id.deleteUsersByQuery);
 
-
+        updateUsersByResult = findViewById(R.id.updateUsersByResult);
+        updateUsersByQuery = findViewById(R.id.updateUsersByQuery);
 
         saveUserByObject.setOnClickListener(this);
         saveUsersByArray.setOnClickListener(this);
@@ -67,10 +66,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         saveOrUpdateObject.setOnClickListener(this);
         saveOrUpdateUsersByArray.setOnClickListener(this);
         saveOrUpdateUsersByList.setOnClickListener(this);
-        deleteUsersByObject.setOnClickListener(this);
-        deleteUsersByArray.setOnClickListener(this);
-        deleteUsersByList.setOnClickListener(this);
+        deleteUsersByResult.setOnClickListener(this);
         deleteUsersByQuery.setOnClickListener(this);
+        updateUsersByResult.setOnClickListener(this);
+        updateUsersByQuery.setOnClickListener(this);
 
         mApiDataBase = ApiServiceModule.getInstance().provideApiService(ApiDataBase.class);
 
@@ -83,30 +82,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             @Override
             public void onChange(RealmResults realmResults) {
-                List<User>list = new ArrayList<>();
-                User[]users = new User[realmResults.size()];
-                for (int i = 0;i < realmResults.size();i++){
-                    list.add((User) realmResults.get(i));
-                    users[i] = (User) realmResults.get(i);
-                }
-                if (realmResults.size() > 0){
-                    UserData.setUser((User) realmResults.first());
-                }
-                UserData.setUserList(list);
-                UserData.setUserArray(users);
-
-                UserData.setRealmResults(realmResults);
             }
         }));
 
         btnFindUser.setOnClickListener(view -> mApiDataBase.findUser("sharkchao", 10)
-        .registerDbFindCallBack(new DbResult.DbFindCallBack() {
+        .registerDbFindCallBack(new DbResult.DbFindCallBack<User>() {
             @Override
-            public void onFirstFindResult(RealmResults realmResults) {
-                realmResults.size();
+            public void onFirstFindResult(RealmResults<User> realmResults) {
+
             }
+
             @Override
-            public void onChange(RealmResults realmResults) {
+            public void onChange(RealmResults<User> realmResults) {
 
             }
         }));
@@ -340,62 +327,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
-    private void deleteUserByObject(){
-        User user = UserData.getUser();
-        if (user != null){
-            mApiDataBase.deleteUsersByObject(UserData.getRealmResults()).registerCallback(new DbResult.DbResultCallback() {
+    private void deleteUsersByResult(){
+        List<String> users = new ArrayList<>();
+        users.add("yuzhijun");
+        users.add("sharkchao");
 
-                @Override
-                public void onSuccess(int count) {
-                    Toast.makeText(MainActivity.this, "成功!"+count, Toast.LENGTH_SHORT).show();
+        mApiDataBase.findUserByIn(users).registerDbFindCallBack(new DbResult.DbFindCallBack() {
+            @Override
+            public void onFirstFindResult(RealmResults realmResults) {
+                Toast.makeText(MainActivity.this, "realmResult"+realmResults.size(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onChange(RealmResults realmResults) {
+                Toast.makeText(MainActivity.this, "realmResult"+realmResults.size(), Toast.LENGTH_SHORT).show();
+                if (realmResults.size() > 0){
+                    realmResults.getRealm().executeTransaction(new Realm.Transaction() {
+                        @Override
+                        public void execute(Realm realm) {
+                            realmResults.deleteAllFromRealm();
+                        }
+                    });
+
                 }
-
-                @Override
-                public void onError(Throwable error) {
-                    Toast.makeText(MainActivity.this, "失败"+error.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-
+            }
+        });
     }
-//    private void deleteUsersByArray(){
-//
-//        User[] userArray = UserData.getUserArray();
-//        if (userArray != null && userArray.length > 0){
-//            mApiDataBase.deleteUsersByArray(userArray).registerCallback(new DbResult.DbResultCallback() {
-//
-//                @Override
-//                public void onSuccess(int count) {
-//                    Toast.makeText(MainActivity.this, "成功!"+count, Toast.LENGTH_SHORT).show();
-//                }
-//
-//                @Override
-//                public void onError(Throwable error) {
-//                    Toast.makeText(MainActivity.this, "失败"+error.getMessage(), Toast.LENGTH_SHORT).show();
-//                }
-//            });
-//        }
-//
-//    }
-//    private void deleteUsersByList(){
-//
-//        List<User> userList = UserData.getUserList();
-//        if (userList != null && userList.size() > 0){
-//            mApiDataBase.deleteUsersByList(userList).registerCallback(new DbResult.DbResultCallback() {
-//
-//                @Override
-//                public void onSuccess(int count) {
-//                    Toast.makeText(MainActivity.this, "成功!"+count, Toast.LENGTH_SHORT).show();
-//                }
-//
-//                @Override
-//                public void onError(Throwable error) {
-//                    Toast.makeText(MainActivity.this, "失败"+error.getMessage(), Toast.LENGTH_SHORT).show();
-//                }
-//            });
-//        }
-//
-//    }
 
     private void deleteUsersByQuery(){
 
@@ -403,12 +360,52 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             @Override
             public void onSuccess(int count) {
-                Toast.makeText(MainActivity.this, "成功!"+count, Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "deleteUsersByQuery成功!"+count, Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onError(Throwable error) {
-                Toast.makeText(MainActivity.this, "失败"+error.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "deleteUsersByQuery失败"+error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void updateUsersByQuery(){
+
+        mApiDataBase.updateUsersByQuery("sharkchao","小红","100").registerCallback(new DbResult.DbResultCallback() {
+
+            @Override
+            public void onSuccess(int count) {
+                Toast.makeText(MainActivity.this, "updateUsersByQuery成功!"+count, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(Throwable error) {
+                Toast.makeText(MainActivity.this, "updateUsersByQuery失败"+error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void updateUsersByResult(){
+        List<String> users = new ArrayList<>();
+        users.add("yuzhijun");
+        users.add("sharkchao");
+
+        mApiDataBase.findUserByIn(users).registerDbFindCallBack(new DbResult.DbFindCallBack<User>() {
+            @Override
+            public void onFirstFindResult(RealmResults<User> realmResults) {
+                Toast.makeText(MainActivity.this, "onFirstFindResult", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onChange(RealmResults<User> realmResults) {
+                if (realmResults.size() > 0){
+                    realmResults.getRealm().executeTransaction(new Realm.Transaction() {
+                        @Override
+                        public void execute(Realm realm) {
+                            realmResults.get(0).setName("刘超");
+                        }
+                    });
+
+                }
             }
         });
     }
@@ -434,17 +431,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.saveOrUpdateUsersByArray:
                 saveOrUpdateUsersByArray();
                 break;
-            case R.id.deleteUsersByObject:
-                deleteUserByObject();
-                break;
-            case R.id.deleteUsersByArray:
-//                deleteUsersByArray();
-                break;
-            case R.id.deleteUsersByList:
-//                deleteUsersByList();
+            case R.id.deleteUsersByResult:
+                deleteUsersByResult();
                 break;
             case R.id.deleteUsersByQuery:
                 deleteUsersByQuery();
+                break;
+            case R.id.updateUsersByResult:
+                updateUsersByResult();
+                break;
+            case R.id.updateUsersByQuery:
+                updateUsersByQuery();
                 break;
         }
     }

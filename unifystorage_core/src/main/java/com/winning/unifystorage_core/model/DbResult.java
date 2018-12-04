@@ -13,7 +13,7 @@ public class DbResult<T>{
     private T result;
     private int count;
     private DbResultCallback mResultCallback;
-    private DbFindCallBack mDbFindCallBack;
+    private DbFindCallBack<T> mDbFindCallBack;
     private boolean isSuccess;
     private Throwable mThrowable;
     private boolean hasObserver;
@@ -31,23 +31,24 @@ public class DbResult<T>{
         void onError(Throwable error);
     }
 
-    public interface DbFindCallBack{
-        void onFirstFindResult(RealmResults realmResults);
-        void onChange(RealmResults realmResults);
+    public interface DbFindCallBack<T>{
+        void onFirstFindResult(RealmResults<T> realmResults);
+        void onChange(RealmResults<T> realmResults);
     }
 
-    public void registerDbFindCallBack(DbFindCallBack dbFindCallBack){
+    public void registerDbFindCallBack(DbFindCallBack<T> dbFindCallBack){
         this.mDbFindCallBack = dbFindCallBack;
     }
 
     public void setDbFindCallBack(RealmResults realmResults,OrderedCollectionChangeSet changeSet){
         if (null != mDbFindCallBack){
-            if (null == changeSet){
+            if (null == changeSet.getInsertions()){
                 mDbFindCallBack.onFirstFindResult(realmResults);
             }else {
                 mDbFindCallBack.onChange(realmResults);
             }
         }
+        realmResults.removeAllChangeListeners();
     }
 
     public void registerCallback(DbResultCallback callback){
