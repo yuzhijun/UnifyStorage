@@ -46,9 +46,9 @@ public class DBServiceMethod<ReturnT> extends ServiceMethod<ReturnT> {
         if (annotation instanceof FIND){
             this.storageHandler = FindHandler.parseAnnotations(annotations, this.table);
         }else if(annotation instanceof SAVE){
-            this.storageHandler = SaveHandler.parseAnnotations();
+            this.storageHandler = SaveHandler.parseAnnotations(annotations, this.table);
         }else if(annotation instanceof SAVEORUPDATE){
-            this.storageHandler = SaveOrUpdateHandler.parseAnnotations();
+            this.storageHandler = SaveOrUpdateHandler.parseAnnotations(annotations, this.table);
         }else if(annotation instanceof UPDATE){
             this.storageHandler = UpdateHandler.parseAnnotations(annotations, this.table);
         }else if(annotation instanceof DELETE){

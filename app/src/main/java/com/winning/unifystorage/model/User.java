@@ -49,4 +49,14 @@ public class User extends RealmObject {
     public void setId(String id) {
         this.id = id;
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", age='" + age + '\'' +
+                ", sex='" + sex + '\'' +
+                '}';
+    }
 }

@@ -57,13 +57,12 @@ public class DbResult<T>{
 
     public void setDbFindCallBack(RealmResults realmResults,OrderedCollectionChangeSet changeSet){
         if (null != mDbFindCallBack){
-            if (null == changeSet.getInsertions()){
+            if (OrderedCollectionChangeSet.State.INITIAL == changeSet.getState()){
                 mDbFindCallBack.onFirstFindResult(realmResults);
             }else {
                 mDbFindCallBack.onChange(realmResults);
             }
         }
-        realmResults.removeAllChangeListeners();
     }
 
     public void registerCallback(DbResultCallback callback){

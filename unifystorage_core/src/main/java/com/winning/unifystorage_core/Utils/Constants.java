@@ -16,4 +16,9 @@ public class Constants {
 
     public static final String[][] patternArray = {{EQUAL_TO, "="}, {GREATER_THAN, ">"}, {LESS_THAN, "<"}, {GREATER_THAN_OR_EQUAL_TO, ">="},
             {LESS_THAN_OR_EQUAL_TO, "<="}, {CONTAINS, "contains"}, {LIKE, "like"}, {ISNOTNULL, "notnull"}, {NULL, "null"}, {IN, "in"}};
+
+    public static final int REALM_DATA = 0;
+    public static final int JSON_OBJECT = 1;
+    public static final int JSON_ARRAY = 2;
+
 }

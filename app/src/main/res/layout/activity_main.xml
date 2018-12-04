@@ -43,6 +43,26 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/saveUsersByList"/>
     <Button
+        android:id="@+id/saveUserByJsonObject"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorPrimary"
+        android:textAllCaps="false"
+        android:textSize="@dimen/font_smaller"
+        android:text="saveUserByJsonObject"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/saveUsersByArray"/>
+    <Button
+        android:id="@+id/saveUserByJsonArray"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorPrimary"
+        android:textAllCaps="false"
+        android:textSize="@dimen/font_smaller"
+        android:text="saveUserByJsonArray"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/saveUserByJsonObject"/>
+    <Button
         android:id="@+id/saveOrUpdateObject"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -52,7 +72,7 @@
         android:text="saveOrUpdateObject"
         android:layout_marginTop="@dimen/spacing_20"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/saveUsersByArray"/>
+        app:layout_constraintTop_toBottomOf="@id/saveUserByJsonArray"/>
     <Button
         android:id="@+id/saveOrUpdateUsersByList"
         android:layout_width="wrap_content"
@@ -74,6 +94,26 @@
         android:text="saveOrUpdateUsersByArray"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/saveOrUpdateUsersByList"/>
+    <Button
+        android:id="@+id/saveOrUpdateUsersByJsonObject"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="@dimen/font_smaller"
+        android:text="saveOrUpdateUsersByJsonObject"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/saveOrUpdateUsersByArray"/>
+    <Button
+        android:id="@+id/saveOrUpdateUsersByJsonArray"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="@dimen/font_smaller"
+        android:text="saveOrUpdateUsersByJsonArray"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/saveOrUpdateUsersByJsonObject"/>
 
     <Button
         android:id="@+id/btnFindAll"
@@ -203,7 +243,7 @@
         android:textColor="@color/red"
         android:layout_marginTop="@dimen/spacing_20"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/saveOrUpdateUsersByArray"/>
+        app:layout_constraintTop_toBottomOf="@id/saveOrUpdateUsersByJsonArray"/>
 
     <Button
         android:id="@+id/deleteUsersByQuery"

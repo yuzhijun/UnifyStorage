@@ -84,11 +84,16 @@ public class UpdateHandler extends HandlerAdapter {
             result.addChangeListener(new OrderedRealmCollectionChangeListener<RealmResults>() {
                 @Override
                 public void onChange(RealmResults realmResults, OrderedCollectionChangeSet changeSet) {
-                    if (realmResults.size() > 0){
-                        updateDataByTransAcion(realmResults,parameterTypes);
+                    if (OrderedCollectionChangeSet.State.INITIAL == changeSet.getState()){
+                        if (realmResults.size() > 0){
+                            updateDataByTransAcion(realmResults,parameterTypes);
+                        }else {
+                            dbResult.setCount(0);
+                            dbResult.setResultCallback(false,new Throwable("No data was selected"));
+                        }
+
                     }
-                    dbResult.setCount(0);
-                    dbResult.setResultCallback(false,new Throwable("No data was selected"));
+
                 }
             });
         }catch (Exception e){
@@ -105,6 +110,7 @@ public class UpdateHandler extends HandlerAdapter {
                 try {
                     Map<String, Object> setMap = FindConditionUtil.getSetMap();
                     Iterator<String> iterator = setMap.keySet().iterator();
+                    dbResult.setCount(setMap.size() == 0 ? 0 : realmResults.size());
                     for (int i = 0;i < realmResults.size();i++){
                         Object instance = realmResults.get(i);
                         for (int j = 0; iterator.hasNext(); j++){
@@ -113,7 +119,6 @@ public class UpdateHandler extends HandlerAdapter {
                             instance.getClass().getMethod("set" + next,rawType).invoke( instance,setMap.get(next));
                         }
                     }
-                    dbResult.setCount(setMap.size() == 0 ? 0 : realmResults.size());
                     dbResult.setResultCallback(setMap.size() != 0,new Throwable("update annotation is invalid,please check your code"));
                 } catch (Exception e) {
                     e.printStackTrace();

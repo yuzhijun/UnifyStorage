@@ -1,10 +1,17 @@
 package com.winning.unifystorage_core.Handler;
 
+import android.support.annotation.NonNull;
+
 import com.winning.unifystorage_core.HandlerAdapter;
 import com.winning.unifystorage_core.UStorage;
 import com.winning.unifystorage_core.Utils.CommonUtil;
+import com.winning.unifystorage_core.Utils.Constants;
+import com.winning.unifystorage_core.annotations.SAVE;
 import com.winning.unifystorage_core.exception.ErrorParamsException;
 import com.winning.unifystorage_core.model.DbResult;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
@@ -17,12 +24,24 @@ import io.realm.RealmObject;
 public class SaveOrUpdateHandler extends HandlerAdapter {
 
     private DbResult result;
-    private SaveOrUpdateHandler(){
-
+    private int jsonType;
+    private Class<? extends RealmObject> table;
+    private SaveOrUpdateHandler(Annotation[] annotations,Class<? extends RealmObject> table){
+        this.table = table;
+        buildField(annotations);
     }
-
-    public static HandlerAdapter parseAnnotations(){
-        return new SaveOrUpdateHandler();
+    private void buildField(Annotation[] annotations) {
+        if (null != annotations){
+            for (Annotation annotation : annotations){
+                if (annotation instanceof SAVE){
+                    SAVE save = (SAVE) annotation;
+                    this.jsonType = save.type();
+                }
+            }
+        }
+    }
+    public static HandlerAdapter parseAnnotations(Annotation[] annotations,Class<? extends RealmObject> table){
+        return new SaveOrUpdateHandler(annotations,table);
     }
 
     @Override
@@ -33,18 +52,12 @@ public class SaveOrUpdateHandler extends HandlerAdapter {
                 @Override
                 public void execute(Realm realm) {
                     Class<?> rawType = CommonUtil.getRawType(parameterTypes[0]);
-                    if (RealmObject[].class.isAssignableFrom(rawType) && rawType.isArray()){
-                        List<RealmObject> realmObjects = realm.copyToRealmOrUpdate(Arrays.asList((RealmObject[]) args[0]));
-                        result.setCount(realmObjects.size());
-                    } else if (RealmObject.class.isAssignableFrom(rawType)){
-                        RealmObject realmObject = realm.copyToRealmOrUpdate(((RealmObject) args[0]));
-                        result.setCount(1);
-                    } else if (List.class.isAssignableFrom(rawType)){
-                        List<RealmObject> realmObjects = realm.copyToRealmOrUpdate((List<RealmObject>) args[0]);
-                        result.setCount(realmObjects.size());
-                    }else {
-                        result.setCount(0);
-                        result.setResultCallback(false,new Throwable("save or update method parameter is invalid,please check your code"));
+                    if (jsonType == Constants.REALM_DATA){
+                        saveDataByRealm(realm, rawType, args);
+                    }else if (jsonType == Constants.JSON_ARRAY){
+                        saveDataByJsonObject(realm, rawType, args);
+                    }else if (jsonType == Constants.JSON_OBJECT){
+                        saveDatByJsonArray(realm, rawType, args);
                     }
                 }
             }, new Realm.Transaction.OnSuccess() {
@@ -61,6 +74,53 @@ public class SaveOrUpdateHandler extends HandlerAdapter {
             });
         }
         return result;
+    }
+    private void saveDatByJsonArray(@NonNull Realm realm, Class<?> rawType, Object[] args) {
+        if (String.class.isAssignableFrom(rawType)){
+            try {
+                JSONArray jsonArray = new JSONArray((String) args[0]);
+                realm.createOrUpdateAllFromJson(table,jsonArray);
+                result.setCount(jsonArray.length());
+            } catch (Exception e) {
+                e.printStackTrace();
+                result.setCount(0);
+                result.setResultCallback(false, e);
+            }
+        }else {
+            result.setCount(0);
+            result.setResultCallback(false,new Throwable("save or update method parameter is invalid,please check your code"));
+        }
+    }
+    private void saveDataByJsonObject(@NonNull Realm realm, Class<?> rawType, Object[] args) {
+        if (String.class.isAssignableFrom(rawType)){
+            try {
+                JSONObject jsonObject = new JSONObject((String) args[0]);
+                realm.createOrUpdateObjectFromJson(table,jsonObject);
+                result.setCount(1);
+            } catch (Exception e) {
+                e.printStackTrace();
+                result.setCount(0);
+                result.setResultCallback(false, e);
+            }
+        }else {
+            result.setCount(0);
+            result.setResultCallback(false,new Throwable("save or update method parameter is invalid,please check your code"));
+        }
+    }
+    private void saveDataByRealm(Realm realm, Class<?> rawType, Object[] args) {
+        if (RealmObject[].class.isAssignableFrom(rawType) && rawType.isArray()){
+            List<RealmObject> realmObjects = realm.copyToRealmOrUpdate(Arrays.asList((RealmObject[]) args[0]));
+            result.setCount(realmObjects.size());
+        } else if (RealmObject.class.isAssignableFrom(rawType)){
+            realm.copyToRealmOrUpdate(((RealmObject) args[0]));
+            result.setCount(1);
+        } else if (List.class.isAssignableFrom(rawType)){
+            List<RealmObject> realmObjects = realm.copyToRealmOrUpdate((List<RealmObject>) args[0]);
+            result.setCount(realmObjects.size());
+        }else {
+            result.setCount(0);
+            result.setResultCallback(false,new Throwable("save or update method parameter is invalid,please check your code"));
+        }
     }
 
     /**

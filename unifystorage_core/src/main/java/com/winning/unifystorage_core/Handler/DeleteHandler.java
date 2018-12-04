@@ -72,12 +72,15 @@ public class DeleteHandler extends HandlerAdapter {
             result.addChangeListener(new OrderedRealmCollectionChangeListener<RealmResults>() {
                 @Override
                 public void onChange(RealmResults realmResults, OrderedCollectionChangeSet changeSet) {
-                    if (realmResults.size() > 0) {
-                        deleteByQueryTransaction(realmResults);
-                    }else {
-                        dbResult.setCount(0);
-                        dbResult.setResultCallback(false,new Throwable("No data was selected"));
+                    if (OrderedCollectionChangeSet.State.INITIAL == changeSet.getState()){
+                        if (realmResults.size() > 0) {
+                            deleteByQueryTransaction(realmResults);
+                        }else {
+                            dbResult.setCount(0);
+                            dbResult.setResultCallback(false,new Throwable("No data was selected"));
+                        }
                     }
+
                 }
             });
 

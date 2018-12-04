@@ -2,12 +2,12 @@ package com.winning.unifystorage;
 
 import com.winning.unifystorage.model.Fake;
 import com.winning.unifystorage.model.User;
+import com.winning.unifystorage_core.Utils.Constants;
 import com.winning.unifystorage_core.annotations.DB;
 import com.winning.unifystorage_core.annotations.DELETE;
 import com.winning.unifystorage_core.annotations.FIND;
 import com.winning.unifystorage_core.annotations.GETJSON;
 import com.winning.unifystorage_core.annotations.JSON;
-import com.winning.unifystorage_core.annotations.Model;
 import com.winning.unifystorage_core.annotations.SAVE;
 import com.winning.unifystorage_core.annotations.SAVEORUPDATE;
 import com.winning.unifystorage_core.annotations.UPDATE;
@@ -26,6 +26,22 @@ public interface ApiDataBase {
     @DB(table = User.class)
     @SAVE
     DbResult saveUser(User user);
+
+    @DB(table = User.class)
+    @SAVE(type = Constants.JSON_OBJECT)
+    DbResult saveUsersByJsonObject(String jsonObject);
+
+    @DB(table = User.class)
+    @SAVE(type = Constants.JSON_ARRAY)
+    DbResult saveUsersByJsonArray(String jsonArray);
+
+    @DB(table = User.class)
+    @SAVE(type = Constants.JSON_ARRAY)
+    DbResult saveOrUpdateUsersByJsonArray(String jsonArray);
+
+    @DB(table = User.class)
+    @SAVE(type = Constants.JSON_OBJECT)
+    DbResult saveOrUpdateUsersByJsonObject(String jsonObject);
 
     @DB(table = User.class)
     @SAVE

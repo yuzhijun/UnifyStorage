@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.winning.unifystorage.data.UserData;
 import com.winning.unifystorage.model.Fake;
 import com.winning.unifystorage.model.User;
 import com.winning.unifystorage_core.model.DbResult;
@@ -21,9 +20,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button saveUserByObject;
     private Button saveUsersByList;
     private Button saveUsersByArray;
+    private Button saveUsersByJsonObject;
+    private Button saveUsersByJsonArray;
+
     private Button saveOrUpdateObject;
     private Button saveOrUpdateUsersByList;
     private Button saveOrUpdateUsersByArray;
+    private Button saveOrUpdateUsersByJsonObject;
+    private Button saveOrUpdateUsersByJsonArray;
     private Button deleteUsersByResult;
     private Button deleteUsersByQuery;
     private Button updateUsersByResult;
@@ -48,9 +52,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         saveUserByObject = findViewById(R.id.saveUserByObject);
         saveUsersByList = findViewById(R.id.saveUsersByList);
         saveUsersByArray = findViewById(R.id.saveUsersByArray);
+        saveUsersByJsonObject = findViewById(R.id.saveUserByJsonObject);
+        saveUsersByJsonArray = findViewById(R.id.saveUserByJsonArray);
+
+
         saveOrUpdateObject = findViewById(R.id.saveOrUpdateObject);
         saveOrUpdateUsersByList = findViewById(R.id.saveOrUpdateUsersByList);
         saveOrUpdateUsersByArray = findViewById(R.id.saveOrUpdateUsersByArray);
+        saveOrUpdateUsersByJsonObject = findViewById(R.id.saveOrUpdateUsersByJsonObject);
+        saveOrUpdateUsersByJsonArray = findViewById(R.id.saveOrUpdateUsersByJsonArray);
 
         btnFindAll = findViewById(R.id.btnFindAll);
         btnFindUser = findViewById(R.id.btnFindUser);
@@ -72,9 +82,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         saveUserByObject.setOnClickListener(this);
         saveUsersByArray.setOnClickListener(this);
         saveUsersByList.setOnClickListener(this);
+        saveUsersByJsonObject.setOnClickListener(this);
+        saveUsersByJsonArray.setOnClickListener(this);
+
         saveOrUpdateObject.setOnClickListener(this);
         saveOrUpdateUsersByArray.setOnClickListener(this);
         saveOrUpdateUsersByList.setOnClickListener(this);
+        saveOrUpdateUsersByJsonObject.setOnClickListener(this);
+        saveOrUpdateUsersByJsonArray.setOnClickListener(this);
+
+
         deleteUsersByResult.setOnClickListener(this);
         deleteUsersByQuery.setOnClickListener(this);
         updateUsersByResult.setOnClickListener(this);
@@ -176,7 +193,49 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         user.setAge("20");
         user.setName("sharkchao");
         user.setSex("男");
+
         mApiDataBase.saveUser(user).registerCallback(new DbResult.DbResultCallback() {
+
+            @Override
+            public void onSuccess(int count) {
+                Toast.makeText(MainActivity.this, "成功!"+count, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(Throwable error) {
+                Toast.makeText(MainActivity.this, "失败"+error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void saveUsersByJsonObject(){
+        String json = "{\n" +
+                "  \"id\" : 50,\n" +
+                "  \"name\" : \"yuzhijun\",\n" +
+                "  \"age\" : \"10\",\n" +
+                "  \"sex\" : \"男\"\n" +
+                "}";
+        mApiDataBase.saveUsersByJsonObject(json).registerCallback(new DbResult.DbResultCallback() {
+
+            @Override
+            public void onSuccess(int count) {
+                Toast.makeText(MainActivity.this, "成功!"+count, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(Throwable error) {
+                Toast.makeText(MainActivity.this, "失败"+error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void saveOrUpdateUsersByJsonObject(){
+        String json = "{\n" +
+                "  \"id\" : 100,\n" +
+                "  \"name\" : \"sharkchao\",\n" +
+                "  \"age\" : \"10\",\n" +
+                "  \"sex\" : \"男\"\n" +
+                "}";
+
+        mApiDataBase.saveOrUpdateUsersByJsonObject(json).registerCallback(new DbResult.DbResultCallback() {
 
             @Override
             public void onSuccess(int count) {
@@ -245,7 +304,57 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
     }
+    private void saveUsersByJsonArray(){
+    String json = "[{\n" +
+            "\t\"id\": \"101\",\n" +
+            "\t\"name\": \"sharkchao\",\n" +
+            "\t\"age\": \"20\",\n" +
+            "\t\"sex\": \"男\"\n" +
+            "}, {\n" +
+            "\t\"id\": \"102\",\n" +
+            "\t\"name\": \"yuzhijun\",\n" +
+            "\t\"age\": \"20\",\n" +
+            "\t\"sex\": \"男\"\n" +
+            "}]";
 
+        mApiDataBase.saveUsersByJsonArray(json).registerCallback(new DbResult.DbResultCallback() {
+
+            @Override
+            public void onSuccess(int count) {
+                Toast.makeText(MainActivity.this, "成功!"+count, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(Throwable error) {
+                Toast.makeText(MainActivity.this, "失败"+error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void saveOrUpdateUsersByJsonArray(){
+        String json = "[{\n" +
+                "\t\"id\": \"103\",\n" +
+                "\t\"name\": \"sharkchao\",\n" +
+                "\t\"age\": \"20\",\n" +
+                "\t\"sex\": \"男\"\n" +
+                "}, {\n" +
+                "\t\"id\": \"104\",\n" +
+                "\t\"name\": \"yuzhijun\",\n" +
+                "\t\"age\": \"20\",\n" +
+                "\t\"sex\": \"男\"\n" +
+                "}]";
+        mApiDataBase.saveOrUpdateUsersByJsonArray(json).registerCallback(new DbResult.DbResultCallback() {
+
+            @Override
+            public void onSuccess(int count) {
+                Toast.makeText(MainActivity.this, "成功!"+count, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(Throwable error) {
+                Toast.makeText(MainActivity.this, "失败"+error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
     private void saveFake(){
         mApiDataBase.saveFake(new Fake()).registerCallback(new DbResult.DbResultCallback() {
 
@@ -346,15 +455,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         users.add("yuzhijun");
         users.add("sharkchao");
 
-        mApiDataBase.findUserByIn(users).registerDbFindCallBack(new DbResult.DbFindCallBack() {
+        mApiDataBase.findUserByIn(users).registerDbFindCallBack(new DbResult.DbFindCallBack<User>() {
             @Override
-            public void onFirstFindResult(RealmResults realmResults) {
-                Toast.makeText(MainActivity.this, "realmResult"+realmResults.size(), Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onChange(RealmResults realmResults) {
-                Toast.makeText(MainActivity.this, "realmResult"+realmResults.size(), Toast.LENGTH_SHORT).show();
+            public void onFirstFindResult(RealmResults<User> realmResults) {
                 if (realmResults.size() > 0){
                     realmResults.getRealm().executeTransaction(new Realm.Transaction() {
                         @Override
@@ -363,7 +466,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }
                     });
 
+                }else {
+                    Toast.makeText(MainActivity.this, "realmResults为空", Toast.LENGTH_SHORT).show();
                 }
+            }
+
+            @Override
+            public void onChange(RealmResults<User> realmResults) {
+
             }
         });
     }
@@ -406,20 +516,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mApiDataBase.findUserByIn(users).registerDbFindCallBack(new DbResult.DbFindCallBack<User>() {
             @Override
             public void onFirstFindResult(RealmResults<User> realmResults) {
-                Toast.makeText(MainActivity.this, "onFirstFindResult", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onChange(RealmResults<User> realmResults) {
                 if (realmResults.size() > 0){
                     realmResults.getRealm().executeTransaction(new Realm.Transaction() {
                         @Override
                         public void execute(Realm realm) {
                             realmResults.get(0).setName("刘超");
+                            Toast.makeText(MainActivity.this, "更新成功!", Toast.LENGTH_SHORT).show();
                         }
                     });
-
+                }else {
+                    Toast.makeText(MainActivity.this, "realmResults为空", Toast.LENGTH_SHORT).show();
                 }
+            }
+
+            @Override
+            public void onChange(RealmResults<User> realmResults) {
+
             }
         });
     }
@@ -473,6 +585,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.saveUsersByArray:
                 saveUsersByArray();
                 break;
+            case R.id.saveUserByJsonObject:
+                saveUsersByJsonObject();
+                break;
+            case R.id.saveUserByJsonArray:
+                saveUsersByJsonArray();
+                break;
             case R.id.saveOrUpdateObject:
                 saveOrUpdateObject();
                 break;
@@ -481,6 +599,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.saveOrUpdateUsersByArray:
                 saveOrUpdateUsersByArray();
+                break;
+            case R.id.saveOrUpdateUsersByJsonObject:
+                saveOrUpdateUsersByJsonObject();
+                break;
+            case R.id.saveOrUpdateUsersByJsonArray:
+                saveOrUpdateUsersByJsonArray();
                 break;
             case R.id.deleteUsersByResult:
                 deleteUsersByResult();
