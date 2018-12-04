@@ -15,6 +15,9 @@ import com.winning.unifystorage_core.model.DbResult;
 
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.http.GET;
+
 /**
  * 2018/11/29
  * Created by SharkChao
@@ -134,4 +137,10 @@ public interface ApiDataBase {
 
     @GETJSON(key = "JSON_INT",convert = Integer.class)
     DbResult<Integer> getInt();
+
+    @GET("/getUser")
+    Call<User> getUser();
+
+    @GET("/getUserList")
+    Call<List<User>> getUserList();
 }

@@ -15,6 +15,9 @@ import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private Button saveUserByObject;
@@ -42,7 +45,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button btnGetJson;
     private Button btnSaveJsonArray;
     private Button btnGetJsonArray;
+    private Button btnMockServer;
     private ApiDataBase mApiDataBase;
+    private ApiDataBase mRetrofitApiDataBase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +84,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnSaveJsonArray = findViewById(R.id.btnSaveJsonArray);
         btnGetJsonArray = findViewById(R.id.btnGetJsonArray);
 
+        btnMockServer = findViewById(R.id.btnMockServer);
+
         saveUserByObject.setOnClickListener(this);
         saveUsersByArray.setOnClickListener(this);
         saveUsersByList.setOnClickListener(this);
@@ -100,8 +107,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnGetJson.setOnClickListener(this);
         btnSaveJsonArray.setOnClickListener(this);
         btnGetJsonArray.setOnClickListener(this);
+        btnMockServer.setOnClickListener(this);
 
         mApiDataBase = ApiServiceModule.getInstance().provideApiService(ApiDataBase.class);
+        mRetrofitApiDataBase  = ApiServiceModule.getInstance().provideRetrofitApiService(this, ApiDataBase.class);
 
 
         btnFindAll.setOnClickListener(view -> mApiDataBase.findAll().registerDbFindCallBack(new DbResult.DbFindCallBack() {
@@ -573,6 +582,38 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    private void mockServer(){
+        //1
+//        Call<User> call =  mRetrofitApiDataBase.getUser();
+//        call.enqueue(new Callback<User>() {
+//            @Override
+//            public void onResponse(Call<User> call, Response<User> response) {
+//                User user = response.body();
+//                System.out.println(user.getName());
+//            }
+//
+//            @Override
+//            public void onFailure(Call<User> call, Throwable t) {
+//
+//            }
+//        });
+
+        //2
+        Call<List<User>> call = mRetrofitApiDataBase.getUserList();
+        call.enqueue(new Callback<List<User>>() {
+            @Override
+            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+                List<User> users = response.body();
+                System.out.println(users.size() + "");
+            }
+
+            @Override
+            public void onFailure(Call<List<User>> call, Throwable t) {
+
+            }
+        });
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()){
@@ -629,6 +670,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btnGetJsonArray:
                 getJsonArray();
+                break;
+            case R.id.btnMockServer:
+                mockServer();
                 break;
         }
     }
