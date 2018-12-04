@@ -1,1 +1,1 @@
-include ':app', ':unifystorage_core'
+include ':app', ':unifystorage_core', ':unifystorage_mock'
