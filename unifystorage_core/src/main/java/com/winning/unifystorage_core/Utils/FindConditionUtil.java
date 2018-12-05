@@ -29,7 +29,14 @@ public class FindConditionUtil {
 
     public static RealmQuery<? extends RealmObject> otherFilter(RealmQuery<? extends RealmObject> query, String orderBy,int limit, String distinct ){
         if (!CommonUtil.isEmptyStr(orderBy)){
-            query.sort(orderBy, orderBy.contains("desc") ? Sort.DESCENDING : Sort.ASCENDING);
+            if (orderBy.contains("desc")){
+                query.sort(orderBy.substring(0, orderBy.indexOf("desc")).trim(), Sort.DESCENDING);
+            }
+            else if (orderBy.contains("asc")){
+                query.sort(orderBy.substring(0, orderBy.indexOf("asc")).trim(), Sort.ASCENDING);
+            }else {
+                query.sort(orderBy);
+            }
         }
 
         if (0 != limit){
