@@ -37,9 +37,9 @@ public class JsonHandler extends HandlerAdapter {
             Class<?> rawType = CommonUtil.getRawType(parameterType);
             Object arg = args[0];
 
-            if (parameterType == Integer.class){
+            if (parameterType == Integer.class || parameterType == int.class){
                 UStorage.kv.encode(this.key, (int)arg);
-            }else if(parameterType == Boolean.class){
+            }else if(parameterType == Boolean.class || parameterType == boolean.class){
                 UStorage.kv.encode(this.key, (boolean) arg);
             }else if(parameterType == String.class){
                 UStorage.kv.encode(this.key, (String) arg);
