@@ -584,7 +584,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void findUser(){
         isFind = true;
-        mApiDataBase.findUser("sharkchao", 10)
+        mApiDataBase.findUser("sharkchao", 20, "男")
                 .registerDbFindCallBack(new DbResult.DbFindCallBack<User>() {
                     @Override
                     public void onFirstFindResult(RealmResults<User> realmResults) {

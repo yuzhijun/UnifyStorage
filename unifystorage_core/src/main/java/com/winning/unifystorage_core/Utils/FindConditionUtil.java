@@ -78,6 +78,10 @@ public class FindConditionUtil {
                         }else {
                             query.or();
                         }
+
+                        if (!CommonUtil.isEmptyStr(whereCondition) && whereCondition.contains(")")){
+                            query.endGroup();
+                        }
                     }
                 }
             }else {//说明是单一条件
@@ -154,6 +158,11 @@ public class FindConditionUtil {
         if (null == parameter || null == parameterType){
             return;
         }
+
+        if (whereCondition.contains("(")){
+            query.beginGroup();
+        }
+
         Class<?> rawType = CommonUtil.getRawType(parameterType);
         for (int j = 0; j < patternArray.length; j ++){
             Pattern pattern = Pattern.compile(patternArray[j][0]);
