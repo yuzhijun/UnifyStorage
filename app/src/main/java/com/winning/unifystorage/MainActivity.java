@@ -6,6 +6,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.winning.unifystorage.model.Cat;
+import com.winning.unifystorage.model.Dog;
 import com.winning.unifystorage.model.Fake;
 import com.winning.unifystorage.model.User;
 import com.winning.unifystorage_core.model.DbResult;
@@ -14,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
+import io.realm.RealmList;
 import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -146,6 +149,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mApiDataBase.findUserByIn(users).registerDbFindCallBack(new DbResult.DbFindCallBack() {
                 @Override
                 public void onFirstFindResult(RealmResults realmResults) {
+
                     Toast.makeText(MainActivity.this, "realmResult"+realmResults.size(), Toast.LENGTH_SHORT).show();
                 }
 
@@ -202,6 +206,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         user.setAge("20");
         user.setName("sharkchao");
         user.setSex("男");
+
+        Dog dog = new Dog();
+        dog.setName("小黄");
+        dog.setAge(2);
+        user.setDog(dog);
+
+        RealmList<Cat> cats = new RealmList<>();
+        Cat catA = new Cat();
+        catA.setName("白猫");
+        catA.setAge(1);
+
+        Cat catB = new Cat();
+        catB.setName("黑猫");
+        catB.setAge(2);
+
+        cats.add(catA);
+        cats.add(catB);
+
+        user.setCats(cats);
 
         mApiDataBase.saveUser(user).registerCallback(new DbResult.DbResultCallback() {
 

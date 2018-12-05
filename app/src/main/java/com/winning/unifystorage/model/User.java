@@ -2,6 +2,7 @@ package com.winning.unifystorage.model;
 
 import java.util.UUID;
 
+import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -17,6 +18,9 @@ public class User extends RealmObject {
     private String name;
     private String age;
     private String sex;
+
+    private Dog dog;
+    private RealmList<Cat> cats;
 
     public String getName() {
         return name;
@@ -50,13 +54,31 @@ public class User extends RealmObject {
         this.id = id;
     }
 
+    public Dog getDog() {
+        return dog;
+    }
+
+    public void setDog(Dog dog) {
+        this.dog = dog;
+    }
+
+    public RealmList<Cat> getCats() {
+        return cats;
+    }
+
+    public void setCats(RealmList<Cat> cats) {
+        this.cats = cats;
+    }
+
     @Override
     public String toString() {
-        return "{" +
+        return "User{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", age='" + age + '\'' +
                 ", sex='" + sex + '\'' +
+                ", dog=" + dog +
+                ", cats=" + cats +
                 '}';
     }
 }
