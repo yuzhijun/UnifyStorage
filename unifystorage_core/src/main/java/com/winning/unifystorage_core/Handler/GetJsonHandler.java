@@ -30,11 +30,11 @@ public class GetJsonHandler extends HandlerAdapter {
     @Override
     public  DbResult invoke(Object[] args, Type[] parameterTypes, Annotation[][] parameterAnnotationsArray) {
         try{
-            if (convert == Integer.class){
+            if (convert == Integer.class || convert == int.class){
                 return new DbResult<>(UStorage.kv.decodeInt(this.key));
             }else if(convert == String.class){
                 return new DbResult<>(UStorage.kv.decodeString(this.key));
-            }else if (convert == Boolean.class){
+            }else if (convert == Boolean.class || convert == boolean.class){
                 return new DbResult<>(UStorage.kv.decodeBool(this.key));
             }else if (!convert.isArray() && Object.class.isAssignableFrom(convert)){
                 String json = UStorage.kv.decodeString(this.key);

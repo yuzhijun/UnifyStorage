@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void saveUserByObject(){
         User user = new User();
-        user.setAge("20");
+        user.setAge(20);
         user.setName("sharkchao");
         user.setSex("男");
 
@@ -213,12 +213,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         List<User>list = new ArrayList<>();
 
         User user1 = new User();
-        user1.setAge("20");
+        user1.setAge(20);
         user1.setName("小明");
         user1.setSex("男");
 
         User user2 = new User();
-        user2.setAge("15");
+        user2.setAge(15);
         user2.setName("小红");
         user2.setSex("女");
 
@@ -241,12 +241,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         User[]users = new User[2];
 
         User user1 = new User();
-        user1.setAge("20");
+        user1.setAge(20);
         user1.setName("小绿");
         user1.setSex("男");
 
         User user2 = new User();
-        user2.setAge("15");
+        user2.setAge(15);
         user2.setName("小白");
         user2.setSex("女");
 
@@ -333,7 +333,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void saveOrUpdateObject(){
         User user = new User();
         user.setId("d07ea3e1-2f75-4363-91c3-697570c882e6");
-        user.setAge("20");
+        user.setAge(20);
         user.setName("小熊");
         user.setSex("男");
         mApiDataBase.saveOrUpdateUser(user).registerCallback(new DbResult.DbResultCallback() {
@@ -353,13 +353,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         List<User>list = new ArrayList<>();
 
         User user1 = new User();
-        user1.setAge("22");
+        user1.setAge(22);
         user1.setName("小明");
         user1.setSex("男");
         user1.setId("b1d92a7f-6201-4d5f-be37-4fb33283ce44");
 
         User user2 = new User();
-        user2.setAge("18");
+        user2.setAge(18);
         user2.setName("小红");
         user2.setSex("女");
         user2.setId("79be8e66-e1d0-4386-96c8-9e71a20ecd42");
@@ -383,14 +383,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         User[]users = new User[2];
 
         User user1 = new User();
-        user1.setAge("22");
+        user1.setAge(22);
         user1.setName("小绿");
         user1.setSex("男");
         user1.setId("56ea25d8-ad50-4422-aa47-63c6e4901c3b");
 
 
         User user2 = new User();
-        user2.setAge("18");
+        user2.setAge(18);
         user2.setName("小白");
         user2.setSex("女");
         user2.setId("6b6ea802-d499-4ba7-9ba5-62de4fc5abc8");
@@ -500,7 +500,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void saveJson(){
         User user = new User();
         user.setName("yuzhijun");
-        user.setAge("18");
+        user.setAge(18);
         user.setSex("男");
 
         boolean result =  mApiDataBase.saveJson(user);
@@ -518,7 +518,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         List<User> users = new ArrayList<>();
         User user = new User();
         user.setName("yuzhijun");
-        user.setAge("18");
+        user.setAge(18);
         user.setSex("男");
 
         users.add(user);
@@ -584,7 +584,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void findUser(){
         isFind = true;
-        mApiDataBase.findUser("sharkchao", 10)
+        mApiDataBase.findUser("sharkchao", 20, "男")
                 .registerDbFindCallBack(new DbResult.DbFindCallBack<User>() {
                     @Override
                     public void onFirstFindResult(RealmResults<User> realmResults) {

@@ -14,6 +14,7 @@ import javax.annotation.Nonnull;
 
 import io.realm.RealmObject;
 import io.realm.RealmQuery;
+import io.realm.Sort;
 
 import static com.winning.unifystorage_core.Utils.Constants.AND;
 import static com.winning.unifystorage_core.Utils.Constants.AND_OR;
@@ -28,7 +29,14 @@ public final class FindConditionUtil {
 
     public static RealmQuery<? extends RealmObject> otherFilter(RealmQuery<? extends RealmObject> query, String orderBy,int limit, String distinct ){
         if (!CommonUtil.isEmptyStr(orderBy)){
-            query.sort(orderBy);
+            if (orderBy.contains("desc")){
+                query.sort(orderBy.substring(0, orderBy.indexOf("desc")).trim(), Sort.DESCENDING);
+            }
+            else if (orderBy.contains("asc")){
+                query.sort(orderBy.substring(0, orderBy.indexOf("asc")).trim(), Sort.ASCENDING);
+            }else {
+                query.sort(orderBy);
+            }
         }
 
         if (0 != limit){
@@ -78,6 +86,10 @@ public final class FindConditionUtil {
                         }else {
                             query.or();
                         }
+                    }
+
+                    if (!CommonUtil.isEmptyStr(whereCondition) && whereCondition.contains(")")){
+                        query.endGroup();
                     }
                 }
             }else {//说明是单一条件
@@ -154,31 +166,44 @@ public final class FindConditionUtil {
         if (null == parameter || null == parameterType){
             return;
         }
+
+        if (whereCondition.contains("(")){
+            query.beginGroup();
+        }
+
         Class<?> rawType = CommonUtil.getRawType(parameterType);
         for (int j = 0; j < patternArray.length; j ++){
             Pattern pattern = Pattern.compile(patternArray[j][0]);
             Matcher matcher = pattern.matcher(whereCondition);
-            if (matcher.matches()){
+            if (matcher.find()){
                 String[] array = whereCondition.split(patternArray[j][1]);
+                String preStr = array[0].trim();
+                if (preStr.contains("(")){
+                    preStr = preStr.substring(preStr.lastIndexOf("(")+1);
+                }
+
+                if (preStr.contains(")")){
+                    preStr = preStr.substring(0, preStr.lastIndexOf(")"));
+                }
                 if (parameterType == String.class){
                     if ("=".equalsIgnoreCase(patternArray[j][1])){
-                        query.equalTo(array[0].trim(),(String) parameter);
+                        query.equalTo(preStr,(String) parameter);
                     }else if ("contains".equalsIgnoreCase(patternArray[j][1])){
-                        query.contains(array[0].trim(),(String) parameter);
+                        query.contains(preStr,(String) parameter);
                     }else if("like".equalsIgnoreCase(patternArray[j][1])){
-                        query.like(array[0].trim(),(String) parameter);
+                        query.like(preStr,(String) parameter);
                     }else if ("notnull".equalsIgnoreCase(patternArray[j][1])){
                         query.isNotNull((String) parameter);
                     }else if ("null".equalsIgnoreCase(patternArray[j][1])){
                         query.isNull((String) parameter);
                     }
-                }else if(parameterType == Integer.class){
+                }else if(parameterType == Integer.class || parameterType == int.class){
                     if ("=".equalsIgnoreCase(patternArray[j][1])){
-                        query.equalTo(array[0].trim(),(int)parameter);
+                        query.equalTo(preStr,(int)parameter);
                     }else if (">".equalsIgnoreCase(patternArray[j][1])){
-                        query.greaterThan(array[0].trim(),(int) parameter);
+                        query.greaterThan(preStr,(int) parameter);
                     }else if ("<".equalsIgnoreCase(patternArray[j][1])){
-                        query.lessThan(array[0].trim(),(int) parameter);
+                        query.lessThan(preStr,(int) parameter);
                     }else if (">=".equalsIgnoreCase(patternArray[j][1])){
                         query.greaterThanOrEqualTo(array[0].trim(),(int) parameter);
                     }else if ("<=".equalsIgnoreCase(patternArray[j][1])){
@@ -186,20 +211,20 @@ public final class FindConditionUtil {
                     }
                 }else if (parameterType == Date.class){
                     if ("=".equalsIgnoreCase(patternArray[j][1])){
-                        query.equalTo(array[0].trim(),(Date) parameter);
+                        query.equalTo(preStr,(Date) parameter);
                     }else if (">".equalsIgnoreCase(patternArray[j][1])){
-                        query.greaterThan(array[0].trim(),(Date) parameter);
+                        query.greaterThan(preStr,(Date) parameter);
                     }else if ("<".equalsIgnoreCase(patternArray[j][1])){
-                        query.lessThan(array[0].trim(),(Date) parameter);
+                        query.lessThan(preStr,(Date) parameter);
                     }else if (">=".equalsIgnoreCase(patternArray[j][1])){
-                        query.greaterThanOrEqualTo(array[0].trim(),(Date) parameter);
+                        query.greaterThanOrEqualTo(preStr,(Date) parameter);
                     }else if ("<=".equalsIgnoreCase(patternArray[j][1])){
-                        query.lessThanOrEqualTo(array[0].trim(),(Date) parameter);
+                        query.lessThanOrEqualTo(preStr,(Date) parameter);
                     }
                 }else if (List.class.isAssignableFrom(rawType)){
                     Type[] componentType =  ((ParameterizedType) parameterType).getActualTypeArguments();
                     if ("in".equalsIgnoreCase(patternArray[j][1]) && componentType[0] == String.class){
-                        query.in(array[0].trim(), (String[]) ((List)parameter).toArray(new String[0]));
+                        query.in(preStr, (String[]) ((List)parameter).toArray(new String[0]));
                     }
                 }
             }

@@ -76,8 +76,8 @@ public interface ApiDataBase {
     DbResult<User> findAll();
 
     @DB(table = User.class)
-    @FIND(where = "name = ? and age > ?",limit = 10,orderBy = "age")
-    DbResult<User> findUser(String name, int age);
+    @FIND(where = "name = ? and (age > ? or sex = ?)",limit = 10,orderBy = "age desc")
+    DbResult<User> findUser(String name, int age, String sex);
 
     @DB(table = User.class)
     @FIND(where = "name in ?",limit = 10)
