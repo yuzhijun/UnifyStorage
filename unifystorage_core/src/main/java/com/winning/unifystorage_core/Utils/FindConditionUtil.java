@@ -14,6 +14,7 @@ import javax.annotation.Nonnull;
 
 import io.realm.RealmObject;
 import io.realm.RealmQuery;
+import io.realm.Sort;
 
 import static com.winning.unifystorage_core.Utils.Constants.AND;
 import static com.winning.unifystorage_core.Utils.Constants.AND_OR;
@@ -28,7 +29,7 @@ public class FindConditionUtil {
 
     public static RealmQuery<? extends RealmObject> otherFilter(RealmQuery<? extends RealmObject> query, String orderBy,int limit, String distinct ){
         if (!CommonUtil.isEmptyStr(orderBy)){
-            query.sort(orderBy);
+            query.sort(orderBy, orderBy.contains("desc") ? Sort.DESCENDING : Sort.ASCENDING);
         }
 
         if (0 != limit){
