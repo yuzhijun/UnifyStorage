@@ -6,7 +6,7 @@ import com.winning.unifystorage_core.HandlerAdapter;
 import com.winning.unifystorage_core.UStorage;
 import com.winning.unifystorage_core.Utils.CommonUtil;
 import com.winning.unifystorage_core.Utils.Constants;
-import com.winning.unifystorage_core.annotations.SAVE;
+import com.winning.unifystorage_core.annotations.SAVEORUPDATE;
 import com.winning.unifystorage_core.exception.ErrorParamsException;
 import com.winning.unifystorage_core.model.DbResult;
 
@@ -33,8 +33,8 @@ public class SaveOrUpdateHandler extends HandlerAdapter {
     private void buildField(Annotation[] annotations) {
         if (null != annotations){
             for (Annotation annotation : annotations){
-                if (annotation instanceof SAVE){
-                    SAVE save = (SAVE) annotation;
+                if (annotation instanceof SAVEORUPDATE){
+                    SAVEORUPDATE save = (SAVEORUPDATE) annotation;
                     this.jsonType = save.type();
                 }
             }
@@ -54,9 +54,9 @@ public class SaveOrUpdateHandler extends HandlerAdapter {
                     Class<?> rawType = CommonUtil.getRawType(parameterTypes[0]);
                     if (jsonType == Constants.REALM_DATA){
                         saveDataByRealm(realm, rawType, args);
-                    }else if (jsonType == Constants.JSON_ARRAY){
-                        saveDataByJsonObject(realm, rawType, args);
                     }else if (jsonType == Constants.JSON_OBJECT){
+                        saveDataByJsonObject(realm, rawType, args);
+                    }else if (jsonType == Constants.JSON_ARRAY){
                         saveDatByJsonArray(realm, rawType, args);
                     }
                 }

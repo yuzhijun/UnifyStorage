@@ -39,11 +39,11 @@ public interface ApiDataBase {
     DbResult saveUsersByJsonArray(String jsonArray);
 
     @DB(table = User.class)
-    @SAVE(type = Constants.JSON_ARRAY)
+    @SAVEORUPDATE(type = Constants.JSON_ARRAY)
     DbResult saveOrUpdateUsersByJsonArray(String jsonArray);
 
     @DB(table = User.class)
-    @SAVE(type = Constants.JSON_OBJECT)
+    @SAVEORUPDATE(type = Constants.JSON_OBJECT)
     DbResult saveOrUpdateUsersByJsonObject(String jsonObject);
 
     @DB(table = User.class)

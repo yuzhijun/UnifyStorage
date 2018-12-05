@@ -11,5 +11,5 @@ import static java.lang.annotation.ElementType.METHOD;
 @Target(METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface SAVEORUPDATE {
-
+    int type() default 0;
 }
