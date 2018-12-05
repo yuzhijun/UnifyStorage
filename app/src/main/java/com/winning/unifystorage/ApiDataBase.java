@@ -73,7 +73,7 @@ public interface ApiDataBase {
 
     @DB(table = User.class)
     @FIND
-    DbResult findAll();
+    DbResult<User> findAll();
 
     @DB(table = User.class)
     @FIND(where = "name = ? and age > ?",limit = 10,orderBy = "age")
@@ -81,7 +81,7 @@ public interface ApiDataBase {
 
     @DB(table = User.class)
     @FIND(where = "name in ?",limit = 10)
-    DbResult findUsers(List<String> users);
+    DbResult<User> findUsers(List<String> users);
 
     @DB(table = User.class)
     @DELETE(where = "name = ?")
@@ -93,15 +93,15 @@ public interface ApiDataBase {
 
     @DB(table = User.class)
     @FIND(where = "name contains ?",distinct = "name")
-    DbResult findUserByContains(String name);
+    DbResult<User> findUserByContains(String name);
 
     @DB(table = User.class)
     @FIND(where = "name like ? and age > ?",distinct = "name")
-    DbResult findUserByLike(String name, int age);
+    DbResult<User> findUserByLike(String name, int age);
 
     @DB(table = User.class)
     @FIND(where = "? notnull",limit = 2)
-    DbResult findUserByNotNull(String name);
+    DbResult<User> findUserByNotNull(String name);
 
     @DB(table = User.class)
     @UPDATE(where = "name = ?",set = "name = ? and age = ?")

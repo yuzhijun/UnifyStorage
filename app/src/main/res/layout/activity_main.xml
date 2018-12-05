@@ -289,5 +289,15 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/updateUsersByResult"/>
 
+    <Button
+        android:id="@+id/btnResult"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:text="查看结果"
+        android:textSize="@dimen/font_smaller"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/updateUsersByQuery"/>
     </android.support.constraint.ConstraintLayout>
 </android.support.v4.widget.NestedScrollView>

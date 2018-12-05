@@ -77,8 +77,6 @@ public class User extends RealmObject {
                 ", name='" + name + '\'' +
                 ", age='" + age + '\'' +
                 ", sex='" + sex + '\'' +
-                ", dog=" + dog +
-                ", cats=" + cats +
                 '}';
     }
 }
