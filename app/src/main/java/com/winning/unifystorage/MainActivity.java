@@ -109,92 +109,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnGetJsonArray.setOnClickListener(this);
         btnMockServer.setOnClickListener(this);
 
+        btnFindAll.setOnClickListener(this);
+        btnFindUser.setOnClickListener(this);
+        btnFindUserByIn.setOnClickListener(this);
+        btnFindUserByContains.setOnClickListener(this);
+        btnFindUserByLike.setOnClickListener(this);
+        btnFindUserByNotNull.setOnClickListener(this);
+
         mApiDataBase = ApiServiceModule.getInstance().provideApiService(ApiDataBase.class);
         mRetrofitApiDataBase  = ApiServiceModule.getInstance().provideRetrofitApiService(this, ApiDataBase.class);
-
-
-        btnFindAll.setOnClickListener(view -> mApiDataBase.findAll().registerDbFindCallBack(new DbResult.DbFindCallBack() {
-            @Override
-            public void onFirstFindResult(RealmResults realmResults) {
-                realmResults.size();
-            }
-
-            @Override
-            public void onChange(RealmResults realmResults) {
-
-            }
-        }));
-
-        btnFindUser.setOnClickListener(view -> mApiDataBase.findUser("sharkchao", 10)
-        .registerDbFindCallBack(new DbResult.DbFindCallBack<User>() {
-            @Override
-            public void onFirstFindResult(RealmResults<User> realmResults) {
-
-            }
-
-            @Override
-            public void onChange(RealmResults<User> realmResults) {
-
-            }
-        }));
-
-        btnFindUserByIn.setOnClickListener(view -> {
-            List<String> users = new ArrayList<>();
-            users.add("yuzhijun");
-            users.add("sharkchao");
-
-            mApiDataBase.findUserByIn(users).registerDbFindCallBack(new DbResult.DbFindCallBack() {
-                @Override
-                public void onFirstFindResult(RealmResults realmResults) {
-                    Toast.makeText(MainActivity.this, "realmResult"+realmResults.size(), Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onChange(RealmResults realmResults) {
-                    Toast.makeText(MainActivity.this, "realmResult"+realmResults.size(), Toast.LENGTH_SHORT).show();
-                }
-            });
-        });
-
-        btnFindUserByContains.setOnClickListener(view -> mApiDataBase.findUserByContains("shark").registerDbFindCallBack(new DbResult.DbFindCallBack() {
-            @Override
-            public void onFirstFindResult(RealmResults realmResults) {
-                realmResults.size();
-            }
-
-            @Override
-            public void onChange(RealmResults realmResults) {
-
-            }
-        }));
-
-        btnFindUserByLike.setOnClickListener(view -> mApiDataBase.findUserByLike("sha*", 10).registerDbFindCallBack(new DbResult.DbFindCallBack() {
-               @Override
-               public void onFirstFindResult(RealmResults realmResults) {
-                   realmResults.size();
-               }
-
-               @Override
-               public void onChange(RealmResults realmResults) {
-
-               }
-           }));
-
-        btnFindUserByNotNull.setOnClickListener(view -> mApiDataBase.findUserByNotNull("name").registerDbFindCallBack(new DbResult.DbFindCallBack() {
-            @Override
-            public void onFirstFindResult(RealmResults realmResults) {
-                realmResults.size();
-            }
-
-            @Override
-            public void onChange(RealmResults realmResults) {
-
-            }
-        }));
-
-
-
-
     }
 
     private void saveUserByObject(){
@@ -614,6 +537,95 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
+    private void findAll(){
+        mApiDataBase.findAll().registerDbFindCallBack(new DbResult.DbFindCallBack<User>() {
+            @Override
+            public void onFirstFindResult(RealmResults<User> realmResults) {
+                Toast.makeText(MainActivity.this, "成功!"+ realmResults.size(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onChange(RealmResults<User> realmResults) {
+
+            }
+        });
+    }
+
+    private void findUser(){
+        mApiDataBase.findUser("sharkchao", 10)
+                .registerDbFindCallBack(new DbResult.DbFindCallBack<User>() {
+                    @Override
+                    public void onFirstFindResult(RealmResults<User> realmResults) {
+                        Toast.makeText(MainActivity.this, "成功!"+ realmResults.size(), Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onChange(RealmResults<User> realmResults) {
+
+                    }
+                });
+    }
+
+    private void findUserByIn(){
+        List<String> users = new ArrayList<>();
+        users.add("yuzhijun");
+        users.add("sharkchao");
+
+        mApiDataBase.findUserByIn(users).registerDbFindCallBack(new DbResult.DbFindCallBack<User>() {
+            @Override
+            public void onFirstFindResult(RealmResults<User> realmResults) {
+                Toast.makeText(MainActivity.this, "成功!"+ realmResults.size(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onChange(RealmResults<User> realmResults) {
+                Toast.makeText(MainActivity.this, "变化!"+ realmResults.size(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void findUserByContains(){
+        mApiDataBase.findUserByContains("shark").registerDbFindCallBack(new DbResult.DbFindCallBack<User>() {
+            @Override
+            public void onFirstFindResult(RealmResults<User> realmResults) {
+                Toast.makeText(MainActivity.this, "成功!"+ realmResults.size(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onChange(RealmResults<User> realmResults) {
+
+            }
+        });
+    }
+
+    private void findUserByLike(){
+        mApiDataBase.findUserByLike("sha*", 10).registerDbFindCallBack(new DbResult.DbFindCallBack<User>() {
+            @Override
+            public void onFirstFindResult(RealmResults<User> realmResults) {
+                Toast.makeText(MainActivity.this, "成功!"+ realmResults.size(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onChange(RealmResults<User> realmResults) {
+
+            }
+        });
+    }
+
+    private void findUserByNotNull(){
+        mApiDataBase.findUserByNotNull("name").registerDbFindCallBack(new DbResult.DbFindCallBack<User>() {
+            @Override
+            public void onFirstFindResult(RealmResults<User> realmResults) {
+                Toast.makeText(MainActivity.this, "成功!"+ realmResults.size(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onChange(RealmResults<User> realmResults) {
+
+            }
+        });
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()){
@@ -673,6 +685,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btnMockServer:
                 mockServer();
+                break;
+            case R.id.btnFindAll:
+                findAll();
+                break;
+            case R.id.btnFindUser:
+                findUser();
+                break;
+            case R.id.btnFindUserByIn:
+                findUserByIn();
+                break;
+            case R.id.btnFindUserByContains:
+                findUserByContains();
+                break;
+            case R.id.btnFindUserByLike:
+                findUserByLike();
+                break;
+            case R.id.btnFindUserByNotNull:
+                findUserByNotNull();
                 break;
         }
     }
