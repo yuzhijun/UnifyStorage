@@ -1,6 +1,6 @@
 package com.winning.unifystorage_core.Utils;
 
-public class Constants {
+public final class Constants {
     public static final String EQUAL_TO = "\\w+(\\s)?=(\\s)?[?](\\s)?";
     public static final String GREATER_THAN = "\\w+(\\s)?>(\\s)?[?](\\s)?";
     public static final String LESS_THAN = "\\w+(\\s)?<(\\s)?[?](\\s)?";

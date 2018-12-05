@@ -20,7 +20,7 @@ import static com.winning.unifystorage_core.Utils.Constants.AND_OR;
 import static com.winning.unifystorage_core.Utils.Constants.EQUAL_TO;
 import static com.winning.unifystorage_core.Utils.Constants.patternArray;
 
-public class FindConditionUtil {
+public final class FindConditionUtil {
     private static List<String> linkCondition = new ArrayList<>();
     private static List<String> setCondition = new ArrayList<>();
     private static Map<String,Object> setMap = new HashMap<>();

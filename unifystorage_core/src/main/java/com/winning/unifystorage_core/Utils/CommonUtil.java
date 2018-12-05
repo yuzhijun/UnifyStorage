@@ -7,7 +7,7 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
 
-public class CommonUtil {
+public final class CommonUtil {
 
     public static <T> void validateServiceInterface(Class<T> service) {
         if (!service.isInterface()) {

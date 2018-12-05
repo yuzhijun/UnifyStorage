@@ -419,6 +419,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mApiDataBase.findUserByIn(users).registerDbFindCallBack(new DbResult.DbFindCallBack<User>() {
             @Override
             public void onFirstFindResult(RealmResults<User> realmResults) {
+
                 if (realmResults.size() > 0){
                     realmResults.getRealm().executeTransaction(new Realm.Transaction() {
                         @Override
@@ -440,7 +441,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void deleteUsersByQuery(){
-
         mApiDataBase.deleteUsersByQuery().registerCallback(new DbResult.DbResultCallback() {
 
             @Override
@@ -455,7 +455,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
     private void updateUsersByQuery(){
-
         mApiDataBase.updateUsersByQuery("sharkchao","小红","100").registerCallback(new DbResult.DbResultCallback() {
 
             @Override
@@ -477,6 +476,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mApiDataBase.findUserByIn(users).registerDbFindCallBack(new DbResult.DbFindCallBack<User>() {
             @Override
             public void onFirstFindResult(RealmResults<User> realmResults) {
+
                 if (realmResults.size() > 0){
                     realmResults.getRealm().executeTransaction(new Realm.Transaction() {
                         @Override
