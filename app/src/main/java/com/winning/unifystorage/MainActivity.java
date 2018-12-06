@@ -441,7 +441,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void deleteUsersByQuery(){
-        mApiDataBase.deleteUsersByQuery().registerCallback(new DbResult.DbResultCallback() {
+        mApiDataBase.deleteUsersByQuery("小白").registerCallback(new DbResult.DbResultCallback() {
 
             @Override
             public void onSuccess(int count) {

@@ -85,7 +85,7 @@ public interface ApiDataBase {
 
     @DB(table = User.class)
     @DELETE(where = "name = ?")
-    DbResult deleteUsersByQuery();
+    DbResult deleteUsersByQuery(String name);
 
     @DB(table = User.class)
     @FIND(where = "name in ?")

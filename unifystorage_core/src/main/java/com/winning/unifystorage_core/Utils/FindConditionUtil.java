@@ -1,5 +1,7 @@
 package com.winning.unifystorage_core.Utils;
 
+import com.winning.unifystorage_core.exception.ErrorParamsException;
+
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -164,7 +166,7 @@ public final class FindConditionUtil {
         }
 
         if (null == parameter || null == parameterType){
-            return;
+            throw new ErrorParamsException("parameter is null, please check your code");
         }
 
         if (whereCondition.contains("(")){
