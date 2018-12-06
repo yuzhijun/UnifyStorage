@@ -21,8 +21,9 @@ import retrofit2.http.GET;
 /**
  * 2018/11/29
  * Created by SharkChao
- * 827623353@qq.com
- * https://github.com/sharkchao
+ * 以后所有的数据库操作，key-value操作，或者你要使用
+ * retrofit的话那么网络访问也可以在这里写，然后添加上
+ * 我们的callAdapter和convert库即可mock网络访问
  */
 public interface ApiDataBase {
 

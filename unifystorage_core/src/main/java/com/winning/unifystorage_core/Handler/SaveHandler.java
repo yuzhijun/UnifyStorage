@@ -49,12 +49,12 @@ public class SaveHandler extends HandlerAdapter {
     @Override
     public DbResult invoke(final Object[] args, final Type[] parameterTypes, Annotation[][] parameterAnnotationsArray) {
         result = new DbResult();
-        if (checkIfValid(args)){
+        if (checkIfValid(args)){//先进行参数合法化验证
             UStorage.realm.executeTransactionAsync(new Realm.Transaction() {
                 @Override
                 public void execute(@NonNull Realm realm) {
                     Class<?> rawType = CommonUtil.getRawType(parameterTypes[0]);
-                    if (jsonType == Constants.REALM_DATA){
+                    if (jsonType == Constants.REALM_DATA){//因为realm针对不同类型的存储是不一样的，所以这个地方进行判断
                         saveDataByRealm(realm, rawType, args);
                     }else if (jsonType == Constants.JSON_ARRAY){
                         saveDatByJsonArray(realm, rawType, args);

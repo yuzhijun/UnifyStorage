@@ -55,18 +55,18 @@ public final class FindConditionUtil {
 
     public static RealmQuery<? extends RealmObject> setFilter(String set, String where, RealmQuery<? extends RealmObject> query, Object[] args, Type[] parameterTypes){
         linkCondition.clear();
-        if (!CommonUtil.isEmptyStr(where)){
+        if (!CommonUtil.isEmptyStr(where)){//判断where条件是否为空，如果不为空才需要添加条件查询
             Pattern linkPattern = Pattern.compile(AND_OR);
             Matcher linkMatcher = linkPattern.matcher(where);
 
-            while (linkMatcher.find()){
+            while (linkMatcher.find()){//查找出来看有多少个and或者or，存储到ArrayList中
                 linkCondition.add(linkMatcher.group());
             }
 
-            //说明有复合条件
             int whereLength;
+            //说明有复合条件查询
             if (linkCondition.size() > 0){
-                String[] whereArray = where.split(AND_OR);
+                String[] whereArray = where.split(AND_OR);//将And或者or两边的条件分割出来
                 whereLength = whereArray.length;
                 if (CommonUtil.isEmptyStr(set)){
                     if (args.length != whereArray.length || parameterTypes.length != whereArray.length){
@@ -74,7 +74,7 @@ public final class FindConditionUtil {
                     }
                 }
 
-                for (int i = 0;i < whereArray.length;i ++){
+                for (int i = 0;i < whereArray.length;i ++){//对每一个语句进行构建查询
                     String whereCondition = whereArray[i];
                     Object parameter = args[i];
                     Type parameterType = parameterTypes[i];
@@ -154,6 +154,9 @@ public final class FindConditionUtil {
         }
     }
 
+    /**
+     * 添加上注解FIND里面的where字段对应的条件查询
+     * */
     public static RealmQuery<? extends RealmObject> whereFilter(String where, RealmQuery<? extends RealmObject> query, Object[] args, Type[] parameterTypes){
         return  setFilter("", where, query, args, parameterTypes);
     }
@@ -161,11 +164,11 @@ public final class FindConditionUtil {
     private static void buildWhereCondition(@Nonnull RealmQuery<? extends RealmObject> query, @Nonnull String whereCondition,
                                      Object parameter, Type parameterType) {
 
-        if (CommonUtil.isEmptyStr(whereCondition)){
+        if (CommonUtil.isEmptyStr(whereCondition)){//如果where条件里面为空，则直接返回
             return;
         }
 
-        if (null == parameter || null == parameterType){
+        if (null == parameter || null == parameterType){//如果where条件不为空，但是参数确是为空，这时候是非法的情况
             throw new ErrorParamsException("parameter is null, please check your code");
         }
 
@@ -174,7 +177,7 @@ public final class FindConditionUtil {
         }
 
         Class<?> rawType = CommonUtil.getRawType(parameterType);
-        for (int j = 0; j < patternArray.length; j ++){
+        for (int j = 0; j < patternArray.length; j ++){//匹配每种条件
             Pattern pattern = Pattern.compile(patternArray[j][0]);
             Matcher matcher = pattern.matcher(whereCondition);
             if (matcher.find()){

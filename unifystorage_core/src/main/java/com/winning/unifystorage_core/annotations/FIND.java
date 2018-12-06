@@ -6,7 +6,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import static java.lang.annotation.ElementType.METHOD;
-
+/**
+ * 用来标识要查询本地数据库
+ * */
 @Documented
 @Target(METHOD)
 @Retention(RetentionPolicy.RUNTIME)

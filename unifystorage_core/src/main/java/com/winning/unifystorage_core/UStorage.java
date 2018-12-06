@@ -160,6 +160,7 @@ public final class UStorage {
                 activityCount --;
                 if (activityCount <= 0){
                     if (null != realm){
+                        realm.removeAllChangeListeners();
                         realm.close();
                         realm = null;
                     }

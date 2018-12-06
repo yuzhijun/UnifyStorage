@@ -17,7 +17,9 @@ import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
-
+/**
+ * 删除操作相关
+ * */
 public class DeleteHandler extends HandlerAdapter {
 
 
@@ -60,7 +62,9 @@ public class DeleteHandler extends HandlerAdapter {
         return dbResult;
     }
 
-
+    /**
+     * 删除方法是要先查找出来然后进行删除
+     * */
     private void deleteByQuery(Object[] args,Type[] parameterTypes) {
         try {
             RealmQuery<? extends RealmObject> query = UStorage.realm.where(this.table);
@@ -72,7 +76,7 @@ public class DeleteHandler extends HandlerAdapter {
             result.addChangeListener(new OrderedRealmCollectionChangeListener<RealmResults>() {
                 @Override
                 public void onChange(RealmResults realmResults, OrderedCollectionChangeSet changeSet) {
-                    if (OrderedCollectionChangeSet.State.INITIAL == changeSet.getState()){
+                    if (OrderedCollectionChangeSet.State.INITIAL == changeSet.getState()){//首次查询的时候state会是initial，因为删除操作不需要关心数据变化情况
                         if (realmResults.size() > 0) {
                             deleteByQueryTransaction(realmResults);
                         }else {

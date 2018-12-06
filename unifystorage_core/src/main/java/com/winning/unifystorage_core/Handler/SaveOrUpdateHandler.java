@@ -52,7 +52,7 @@ public class SaveOrUpdateHandler extends HandlerAdapter {
                 @Override
                 public void execute(Realm realm) {
                     Class<?> rawType = CommonUtil.getRawType(parameterTypes[0]);
-                    if (jsonType == Constants.REALM_DATA){
+                    if (jsonType == Constants.REALM_DATA){//因为realm针对不同类型的存储是不一样的，所以这个地方进行判断
                         saveDataByRealm(realm, rawType, args);
                     }else if (jsonType == Constants.JSON_OBJECT){
                         saveDataByJsonObject(realm, rawType, args);

@@ -62,7 +62,7 @@ public class FindHandler extends HandlerAdapter {
 
             RealmQuery<? extends RealmObject> otherFilteredQuery = FindConditionUtil.otherFilter(whereFilteredQuery, orderBy, limit, distinct);
 
-            RealmResults result = otherFilteredQuery.findAllAsync();
+            RealmResults result = otherFilteredQuery.findAllAsync();//这个地方所有的查询操作都是用异步的方式
             result.addChangeListener(new OrderedRealmCollectionChangeListener<RealmResults>() {
                 @Override
                 public void onChange(RealmResults realmResults, OrderedCollectionChangeSet changeSet) {

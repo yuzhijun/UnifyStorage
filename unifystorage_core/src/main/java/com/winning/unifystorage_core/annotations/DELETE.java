@@ -6,7 +6,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import static java.lang.annotation.ElementType.METHOD;
-
+/**
+ * 用来标识要做删除操作
+ * */
 @Documented
 @Target(METHOD)
 @Retention(RetentionPolicy.RUNTIME)

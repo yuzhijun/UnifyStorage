@@ -10,6 +10,7 @@ import retrofit2.Retrofit;
 
 /**
  * @author yuzhijun
+ * 封装获取接口操作类
  * */
 public class ApiServiceModule {
     private volatile static ApiServiceModule mInstance;
