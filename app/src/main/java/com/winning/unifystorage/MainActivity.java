@@ -130,6 +130,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mRetrofitApiDataBase  = ApiServiceModule.getInstance().provideRetrofitApiService(this, ApiDataBase.class);
     }
 
+    /**
+     * 存储对象，支持一对多
+     * 注意：如果数据库中有此条数据，会回调onError
+     */
     private void saveUserByObject(){
         User user = new User();
         user.setAge(20);
@@ -168,6 +172,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
     }
+
+    /**
+     * 支持直接存储json字符串
+     * 注意：如果数据库中有此条数据，会回调onError
+     */
     private void saveUsersByJsonObject(){
         String json = "{\n" +
                 "  \"id\" : 50,\n" +
@@ -188,6 +197,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
     }
+
+    /**
+     * 支持存储或更新对象通过json字符串
+     * 注意：数据有此条数据则会更新，数据库没有则会插入
+     */
     private void saveOrUpdateUsersByJsonObject(){
         String json = "{\n" +
                 "  \"id\" : 100,\n" +
@@ -209,6 +223,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
     }
+
+    /**
+     * 支持存储List集合
+     * 注意： List<T>list  T为realmObject类型
+     * 注意：如果数据库中有此条数据，会回调onError
+     */
     private void saveUsersByList(){
         List<User>list = new ArrayList<>();
 
@@ -237,6 +257,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
     }
+
+    /**
+     * 支持存储数组格式
+     * 注意：如果数据库中有此条数据，会回调onError
+     */
     private void saveUsersByArray(){
         User[]users = new User[2];
 
@@ -265,6 +290,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
     }
+
+    /**
+     * 支持存储json集合字符串
+     * 注意：如果数据库中有此条数据，会回调onError
+     */
     private void saveUsersByJsonArray(){
     String json = "[{\n" +
             "\t\"id\": \"101\",\n" +
@@ -291,6 +321,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
     }
+
+    /**
+     * 支持存入或更新集合通过json字符串
+     * 注意：数据有此条数据则会更新，数据库没有则会插入
+     */
     private void saveOrUpdateUsersByJsonArray(){
         String json = "[{\n" +
                 "\t\"id\": \"103\",\n" +
@@ -316,6 +351,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
     }
+
+    /**
+     * 测试一些非法传参，都会回调到onError()
+     */
     private void saveFake(){
         mApiDataBase.saveFake(new Fake()).registerCallback(new DbResult.DbResultCallback() {
 
@@ -330,6 +369,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
     }
+
+    /**
+     * 存储或更新对象
+     * 注意：数据有此条数据则会更新，数据库没有则会插入
+     */
     private void saveOrUpdateObject(){
         User user = new User();
         user.setId("d07ea3e1-2f75-4363-91c3-697570c882e6");
@@ -349,6 +393,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
     }
+
+    /**
+     * 存储或更新对象集合
+     * 注意：数据有此条数据则会更新，数据库没有则会插入
+     */
     private void saveOrUpdateUsersByList(){
         List<User>list = new ArrayList<>();
 
@@ -379,6 +428,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
     }
+    /**
+     * 存储或更新对象数组
+     * 注意：数据有此条数据则会更新，数据库没有则会插入
+     */
     private void saveOrUpdateUsersByArray(){
         User[]users = new User[2];
 
@@ -411,6 +464,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
+    /**
+     * 删除分为两种，我们推荐用第二种
+     * 这是第一种：先查询出来再删除
+     */
     private void deleteUsersByResult(){
         List<String> users = new ArrayList<>();
         users.add("yuzhijun");
@@ -439,7 +496,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
     }
-
+    /**
+     * 删除分为两种，我们推荐用第二种
+     * 这是第二种：直接删除
+     */
     private void deleteUsersByQuery(){
         mApiDataBase.deleteUsersByQuery("小白").registerCallback(new DbResult.DbResultCallback() {
 
@@ -454,6 +514,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
     }
+
+    /**
+     * 更新分为两种
+     * 这是第一种 ：直接更新数据库对象，如果数据库没有此对象，会回调onError()
+     */
     private void updateUsersByQuery(){
         mApiDataBase.updateUsersByQuery("sharkchao","小红","100").registerCallback(new DbResult.DbResultCallback() {
 
@@ -468,6 +533,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
     }
+    /**
+     * 更新分为两种
+     * 这是第二种 ：先查询出来再更新
+     */
     private void updateUsersByResult(){
         List<String> users = new ArrayList<>();
         users.add("yuzhijun");
@@ -497,15 +566,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
+    /**
+     * 支持直接将对象存储到SharedPreferences文件中
+     * 支持多进程访问
+     */
     private void saveJson(){
         User user = new User();
         user.setName("yuzhijun");
         user.setAge(18);
         user.setSex("男");
-
         boolean result =  mApiDataBase.saveJson(user);
     }
-
+    /**
+     * 支持从SharedPreferences文件中获取对象
+     * 支持多进程访问
+     */
     private void getJson(){
         DbResult<User> user = mApiDataBase.getJson();
         if (null != user && null != user.getResult()){
@@ -513,7 +588,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
     }
-
+    /**
+     * 支持直接将对象集合存储到SharedPreferences文件中
+     */
     private void saveJsonArray(){
         List<User> users = new ArrayList<>();
         User user = new User();
@@ -525,7 +602,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         boolean result =  mApiDataBase.saveJsonArray(users);
     }
-
+    /**
+     * 支持从SharedPreferences文件中获取对象集合
+     */
     private void getJsonArray(){
         DbResult<List<User>> users = mApiDataBase.getJsonArray();
         if (null != users && null != users.getResult()){
@@ -533,7 +612,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
     }
-
+    /**
+     *  支持本地模拟网络访问数据
+     */
     private void mockServer(){
         //1
 //        Call<User> call =  mRetrofitApiDataBase.getUser();
@@ -566,6 +647,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
+    /**
+     * 查询所有
+     */
     private void findAll(){
         isFind = true;
         mApiDataBase.findAll().registerDbFindCallBack(new DbResult.DbFindCallBack<User>() {
@@ -582,6 +666,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
+    /**
+     * 支持条件查询
+     */
     private void findUser(){
         isFind = true;
         mApiDataBase.findUser("sharkchao", 20, "男")
@@ -599,6 +686,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 });
     }
 
+    /**
+     * 支持通过in从集合中查询
+     */
     private void findUserByIn(){
         isFind = true;
         List<String> users = new ArrayList<>();
@@ -619,6 +709,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
+    /**
+     * 支持contains包含查询
+     */
     private void findUserByContains(){
         isFind = true;
         mApiDataBase.findUserByContains("shark").registerDbFindCallBack(new DbResult.DbFindCallBack<User>() {
@@ -635,6 +728,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
+    /**
+     * 支持like模糊查询
+     */
     private void findUserByLike(){
         isFind = true;
         mApiDataBase.findUserByLike("sha*", 10).registerDbFindCallBack(new DbResult.DbFindCallBack<User>() {
@@ -651,6 +747,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
+    /**
+     * 支持NotNull非空查询
+     */
     private void findUserByNotNull(){
         isFind = true;
         mApiDataBase.findUserByNotNull("name").registerDbFindCallBack(new DbResult.DbFindCallBack<User>() {
